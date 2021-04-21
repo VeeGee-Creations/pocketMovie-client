@@ -1,22 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 
 export default class MovieCard extends React.Component {
     render() {
         const {movie, onClick} = this.props;
-        return <div className="movie-card" onClick={() => onClick(movie)}>
-            <div className="movie-poster">
-                <img src={movie.ImageURL}/>
-            </div>
-            <div className="movie-title">
-                <span className="label">Title: </span>
-                <span className="value">{movie.Title}</span>
-            </div>
-            <div className="movie-release">
-                <span className="label">Release: </span>
-                <span className="value">{movie.Release}</span>
-            </div>
-            </div>;
+        return (
+            <Card>
+                <Card.Img variant="top" src={movie.ImageURL}/>
+                <Card.Body>
+                    <Card.Title>{movie.Title}</Card.Title>
+                    <Card.Text>{movie.Synopsis}</Card.Text>
+                    <Button onClick={() => onClick(movie)} variant="link">Open</Button>
+                </Card.Body>
+            </Card>
+        );
     }
 }
 
