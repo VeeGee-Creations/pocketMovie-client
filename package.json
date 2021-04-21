@@ -17,9 +17,6 @@
   },
   "homepage": "https://github.com/VeeGee-Creations/pocketMovie-client#readme",
   "dependencies": {
-    "axios": "^0.21.1",
-    "email-prop-type": "^3.0.1",
-    "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
