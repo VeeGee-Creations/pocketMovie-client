@@ -1,4 +1,6 @@
 import React, {useState} from 'react';
+import PropTypes from 'prop-types';
+import emailPropType from 'email-prop-type';
 
 export default function RegisterView(props) {
     const [username, setUsername] = useState('');
@@ -29,7 +31,7 @@ export default function RegisterView(props) {
             <div>
                 <label>
                     Password:
-                    <input type="text" value={password} onChange={e => setPassword(e.target.value)}/>
+                    <input type="password" value={password} onChange={e => setPassword(e.target.value)}/>
                 </label>
             </div>
             <div>
@@ -42,3 +44,13 @@ export default function RegisterView(props) {
         </form>
     )
 }
+
+RegisterView.propTypes = {
+    register: PropTypes.shape({
+        username: PropTypes.string.isRequired,
+        email: emailPropType.isRequired,
+        password: PropTypes.string.isRequired,
+        birthday: PropTypes.instanceOf(Date).isRequired
+    }),
+    onRegister: PropTypes.func.isRequired
+};
