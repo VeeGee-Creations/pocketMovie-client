@@ -20,6 +20,7 @@ export default function RegisterView(props) {
 
     return (
         <div className="Register">
+            <h1>Pocket Movies</h1>
             <Form onSubmit={handleSubmit}>
                 <Form.Group size="lg" controlId="username">
                     <Form.Label>Username</Form.Label>
@@ -38,6 +39,7 @@ export default function RegisterView(props) {
                     <Form.Control type="date" value={birthday} onChange={e => setBirthday(e.target.value)}/>
                 </Form.Group>
                 <Button block size="lg" type="submit" disabled={!validateForm()}>Register</Button>
+                <Button block size="lg" variant="link" onClick={() => props.onRegister(true)}>Return to Login</Button>
             </Form>
         </div>
     );

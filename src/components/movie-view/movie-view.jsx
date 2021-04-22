@@ -6,13 +6,17 @@ import './movie-view.scss';
 
 export default class MovieView extends React.Component {
 
+    componentDidMount() {
+        window.scrollTo(0, 0)
+    }
+
     render() {
-        const {movie, onBackClick} = this.props;
+        const {movie, onBackClick, myRef} = this.props;
 
         return(
             <Row className="main-view justify-content-md-center">
-                <Col md={6}>
-            <Card>
+                <Col md={9}>
+            <Card style={{height: 'auto', marginBottom: '0'}}>
                 <Card.Img src={movie.ImageURL}/>
                 <Card.Body>
                     <Card.Title>{movie.Title}</Card.Title>
@@ -22,41 +26,11 @@ export default class MovieView extends React.Component {
                     <Card.Text>{`Actors: ${movie.Actors.map((actor) => actor.Name).join(', ')}`}</Card.Text>
                     <Card.Text>{`Genres: ${movie.Genres.map((genre) => genre.Name).join(', ')}`}</Card.Text>
 
-                    <Button onClick={() => onBackClick(null)} variant="link">Back</Button>
+                    <Button onClick={() => {onBackClick(null); window.scrollTo(0, 0)}} variant="link">Back</Button>
                 </Card.Body>
             </Card>
             </Col>
             </Row>
-            // <div className="movie-view">
-            //     <div className="movie-poster">
-            //         <img src={movie.ImageURL}/>
-            //     </div>
-            //     <div className="movie-title">
-            //         <span className="label">Title: </span>
-            //         <span className="value">{movie.Title}</span>
-            //     </div>
-            //     <div className="movie-release">
-            //         <span className="label">Release: </span>
-            //         <span className="value">{movie.Release}</span>
-            //     </div>
-            //     <div className="movie-synopsis">
-            //         <span className="label">Synopsis: </span>
-            //         <span className="value">{movie.Synopsis}</span>
-            //     </div>
-            //     <div className="movie-directors">
-            //         <span className="label">Directors: </span>
-            //         <span className="value">{movie.Directors.map((director) => director.Name).join(', ')}</span>
-            //     </div>
-            //     <div className="movie-actors">
-            //         <span className="label">Actors: </span>
-            //         <span className="value">{movie.Actors.map((director) => director.Name).join(', ')}</span>
-            //     </div>
-            //     <div className="movie-genres">
-            //         <span className="label">Genres: </span>
-            //         <span className="value">{movie.Genres.map((genre) => genre.Name).join(', ')}</span>
-            //     </div>
-            //     <button onClick={() => onBackClick(null)}>Back</button>
-            // </div>
         );
     }
 }

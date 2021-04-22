@@ -1,11 +1,8 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import Button from 'react-bootstrap/Button';
-// import Row from 'react-bootstrap/Row';
-// import Col from 'react-bootstrap/Col';
+import {Button, Card, Form} from 'react-bootstrap';
 
 import './login-view.scss';
-import { Card, Form } from 'react-bootstrap';
 
 export default function LoginView(props) {
     const [username, setUsername] = useState('');
@@ -23,6 +20,7 @@ export default function LoginView(props) {
 
     return (
         <div className="Login">
+            <h1>Pocket Movies</h1>
             <Form onSubmit={handleSubmit}>
                 <Form.Group size="lg" controlId="username">
                     <Form.Label>Username</Form.Label>
@@ -33,7 +31,7 @@ export default function LoginView(props) {
                     <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)}/>
                 </Form.Group>
                 <Button block size="lg" type="submit" disabled={!validateForm()}>Login</Button>
-                <Button className="register-button" block size="lg" type="button" onClick= {handleRegister}>Register</Button>
+                <Button block size="lg" variant="link" onClick= {handleRegister}>Register</Button>
             </Form>
         </div>
     );
