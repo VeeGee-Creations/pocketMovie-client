@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import Dotdotdot from 'react-dotdotdot';
+
+import './movie-card.scss';
 
 export default class MovieCard extends React.Component {
     render() {
@@ -11,7 +14,9 @@ export default class MovieCard extends React.Component {
                 <Card.Img variant="top" src={movie.ImageURL}/>
                 <Card.Body>
                     <Card.Title>{movie.Title}</Card.Title>
-                    <Card.Text>{movie.Synopsis}</Card.Text>
+                    <Dotdotdot clamp={5}>
+                        <Card.Text>{movie.Synopsis}</Card.Text>
+                    </Dotdotdot>
                     <Button onClick={() => onClick(movie)} variant="link">Open</Button>
                 </Card.Body>
             </Card>

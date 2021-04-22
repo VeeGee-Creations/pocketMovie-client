@@ -8,6 +8,8 @@ import MovieCard from '../movie-card/movie-card';
 import MovieView from '../movie-view/movie-view';
 import RegisterView from '../register-view/register-view';
 
+import './main-view.scss'
+
 export default class MainView extends React.Component {
     constructor() {
         super();
@@ -67,7 +69,7 @@ export default class MainView extends React.Component {
                         </Col>
                     )
                     : movies.map(movie => (
-                        <Col md={3}>
+                        <Col md={3} sm={6}>
                             <MovieCard key={movie._id} movie={movie} onClick={movie => this.onMovieClick(movie)}/>
                         </Col>
                     ))

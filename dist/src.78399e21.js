@@ -47862,7 +47862,459 @@ LoginView.propTypes = {
   onLoggedIn: _propTypes.default.func.isRequired,
   onRegister: _propTypes.default.func.isRequired
 };
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","./login-view.scss":"components/login-view/login-view.scss","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js"}],"components/movie-card/movie-card.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","./login-view.scss":"components/login-view/login-view.scss","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js"}],"../node_modules/react-dotdotdot/src/clamp.js":[function(require,module,exports) {
+var define;
+/*!
+ * Clamp.js 0.7.0
+ * Based on: https://github.com/xavi160/Clamp.js/commit/e313818da231b8dd8fd603dd9c9a61a9d725c22f
+ * Mixins:
+ * - https://github.com/josephschmitt/Clamp.js/pull/50
+ * - https://github.com/josephschmitt/Clamp.js/pull/49
+ *
+ * Copyright 2011-2013, Joseph Schmitt http://joe.sh
+ * Released under the WTFPL license
+ * http://sam.zoy.org/wtfpl/
+ */
+
+(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD
+    define([], factory);
+  } else if (typeof exports === 'object') {
+    // Node, CommonJS-like
+    module.exports = factory();
+  } else {
+    // Browser globals
+    root.$clamp = factory();
+  }
+}(this, function() {
+  /**
+   * Clamps a text node.
+   * @param {HTMLElement} element. Element containing the text node to clamp.
+   * @param {Object} options. Options to pass to the clamper.
+   */
+  function clamp(element, options) {
+    options = options || {};
+
+    var self = this,
+      win = window,
+      opt = {
+        clamp: options.clamp || 2,
+        useNativeClamp: typeof(options.useNativeClamp) != 'undefined' ? options.useNativeClamp : true,
+        splitOnChars: options.splitOnChars || ['.', '-', '–', '—', ' '], //Split on sentences (periods), hypens, en-dashes, em-dashes, and words (spaces).
+        animate: options.animate || false,
+        truncationChar: options.truncationChar || '…',
+        truncationHTML: options.truncationHTML
+      },
+
+      sty = element.style,
+      originalText = element.innerHTML,
+
+      supportsNativeClamp = typeof(element.style.webkitLineClamp) != 'undefined',
+      clampValue = opt.clamp,
+      isCSSValue = clampValue.indexOf && (clampValue.indexOf('px') > -1 || clampValue.indexOf('em') > -1),
+      truncationHTMLContainer;
+
+    if (opt.truncationHTML) {
+      truncationHTMLContainer = document.createElement('span');
+      truncationHTMLContainer.innerHTML = opt.truncationHTML;
+    }
+
+
+    // UTILITY FUNCTIONS __________________________________________________________
+
+    /**
+     * Return the current style for an element.
+     * @param {HTMLElement} elem The element to compute.
+     * @param {string} prop The style property.
+     * @returns {number}
+     */
+    function computeStyle(elem, prop) {
+      if (!win.getComputedStyle) {
+        win.getComputedStyle = function(el, pseudo) {
+          this.el = el;
+          this.getPropertyValue = function(prop) {
+            var re = /(\-([a-z]){1})/g;
+            if (prop == 'float') prop = 'styleFloat';
+            if (re.test(prop)) {
+              prop = prop.replace(re, function() {
+                return arguments[2].toUpperCase();
+              });
+            }
+            return el.currentStyle && el.currentStyle[prop] ? el.currentStyle[prop] : null;
+          };
+          return this;
+        };
+      }
+
+      return win.getComputedStyle(elem, null).getPropertyValue(prop);
+    }
+
+    /**
+     * Returns the maximum number of lines of text that should be rendered based
+     * on the current height of the element and the line-height of the text.
+     */
+    function getMaxLines(height) {
+      var availHeight = height || (element.parentNode.clientHeight-element.offsetTop),
+        lineHeight = getLineHeight(element);
+
+      return Math.max(Math.floor(availHeight / lineHeight), 0);
+    }
+
+    /**
+     * Returns the maximum height a given element should have based on the line-
+     * height of the text and the given clamp value.
+     */
+    function getMaxHeight(clmp) {
+      var lineHeight = getLineHeight(element);
+      return lineHeight * clmp;
+    }
+
+    /**
+     * Returns the line-height of an element as an integer.
+     */
+    function getLineHeight(elem) {
+      var lh = computeStyle(elem, 'line-height');
+      if (lh == 'normal') {
+        // Normal line heights vary from browser to browser. The spec recommends
+        // a value between 1.0 and 1.2 of the font size. Using 1.1 to split the diff.
+        lh = parseFloat(computeStyle(elem, 'font-size')) * 1.2;
+      }
+      return Math.round(parseFloat(lh));
+    }
+
+
+    // MEAT AND POTATOES (MMMM, POTATOES...) ______________________________________
+    var splitOnChars = opt.splitOnChars.slice(0),
+      splitChar = splitOnChars[0],
+      chunks,
+      lastChunk;
+
+    /**
+     * Gets an element's last child. That may be another node or a node's contents.
+     */
+    function getLastChild(elem) {
+      if (!elem.lastChild) {
+        return;
+      }
+      //Current element has children, need to go deeper and get last child as a text node
+      if (elem.lastChild.children && elem.lastChild.children.length > 0) {
+        return getLastChild(Array.prototype.slice.call(elem.children).pop());
+      } else if (
+        !elem.lastChild
+        || !elem.lastChild.nodeValue
+        || elem.lastChild.nodeValue == opt.truncationChar
+        || elem.lastChild.nodeType === Node.COMMENT_NODE
+      ) {
+        // Handle scenario where the last child is white-space node
+        var sibling = elem.lastChild;
+        do {
+          if (!sibling) {
+            return;
+          }
+          // TEXT_NODE
+          if (
+            sibling.nodeType === 3
+            && ['', opt.truncationChar].indexOf(sibling.nodeValue) === -1
+            && elem.lastChild.nodeType !== Node.COMMENT_NODE
+          ) {
+            return sibling;
+          }
+          if (sibling.lastChild) {
+            var lastChild = getLastChild(sibling);
+            if (lastChild) {
+              return lastChild;
+            }
+          }
+          //Current sibling is pretty useless
+          sibling.parentNode.removeChild(sibling);
+        } while (sibling = sibling.previousSibling);
+      }
+      //This is the last child we want, return it
+      else {
+        return elem.lastChild;
+      }
+    }
+
+    /**
+     * Removes one character at a time from the text until its width or
+     * height is beneath the passed-in max param.
+     */
+    function truncate(target, maxHeight) {
+      if (!target || !maxHeight) {
+        return;
+      }
+
+      /**
+       * Resets global variables.
+       */
+      function reset() {
+        splitOnChars = opt.splitOnChars.slice(0);
+        splitChar = splitOnChars[0];
+        chunks = null;
+        lastChunk = null;
+      }
+
+      var nodeValue = target.nodeValue.replace(opt.truncationChar, '');
+
+      //Grab the next chunks
+      if (!chunks) {
+        //If there are more characters to try, grab the next one
+        if (splitOnChars.length > 0) {
+          splitChar = splitOnChars.shift();
+        }
+        //No characters to chunk by. Go character-by-character
+        else {
+          splitChar = '';
+        }
+
+        chunks = nodeValue.split(splitChar);
+      }
+
+      //If there are chunks left to remove, remove the last one and see if
+      // the nodeValue fits.
+      if (chunks.length > 1) {
+        // console.log('chunks', chunks);
+        lastChunk = chunks.pop();
+        // console.log('lastChunk', lastChunk);
+        applyEllipsis(target, chunks.join(splitChar));
+      }
+      //No more chunks can be removed using this character
+      else {
+        chunks = null;
+      }
+
+      //Insert the custom HTML before the truncation character
+      if (truncationHTMLContainer) {
+        target.nodeValue = target.nodeValue.replace(opt.truncationChar, '');
+        element.innerHTML = target.nodeValue + ' ' + truncationHTMLContainer.innerHTML + opt.truncationChar;
+      }
+
+      //Search produced valid chunks
+      if (chunks) {
+        //It fits
+        if (element.clientHeight <= maxHeight) {
+          //There's still more characters to try splitting on, not quite done yet
+          if (splitOnChars.length >= 0 && splitChar !== '') {
+            applyEllipsis(target, chunks.join(splitChar) + splitChar + lastChunk);
+            chunks = null;
+          }
+          //Finished!
+          else {
+            return element.innerHTML;
+          }
+        }
+      }
+      //No valid chunks produced
+      else {
+        //No valid chunks even when splitting by letter, time to move
+        //on to the next node
+        if (splitChar === '') {
+          applyEllipsis(target, '');
+          target = getLastChild(element);
+
+          reset();
+        }
+      }
+
+      //If you get here it means still too big, let's keep truncating
+      if (opt.animate) {
+        setTimeout(function() {
+          truncate(target, maxHeight);
+        }, opt.animate === true ? 10 : opt.animate);
+      } else {
+        return truncate(target, maxHeight);
+      }
+    }
+
+    function applyEllipsis(elem, str) {
+      elem.nodeValue = str + opt.truncationChar;
+    }
+
+
+    // CONSTRUCTOR ________________________________________________________________
+
+    if (clampValue == 'auto') {
+      clampValue = getMaxLines();
+    } else if (isCSSValue) {
+      clampValue = getMaxLines(parseInt(clampValue, 10));
+    }
+
+    var clampedText;
+    if (supportsNativeClamp && opt.useNativeClamp) {
+      sty.overflow = 'hidden';
+      sty.textOverflow = 'ellipsis';
+      sty.webkitBoxOrient = 'vertical';
+      sty.display = '-webkit-box';
+      sty.webkitLineClamp = clampValue;
+
+      if (isCSSValue) {
+        sty.height = opt.clamp + 'px';
+      }
+    } else {
+      var height = getMaxHeight(clampValue);
+      if (height < element.clientHeight) {
+        clampedText = truncate(getLastChild(element), height);
+      }
+    }
+
+    return {
+      'original': originalText,
+      'clamped': clampedText
+    };
+  }
+
+  return clamp;
+}));
+
+},{}],"../node_modules/isobject/index.js":[function(require,module,exports) {
+/*!
+ * isobject <https://github.com/jonschlinkert/isobject>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+'use strict';
+
+module.exports = function isObject(val) {
+  return val != null && typeof val === 'object' && Array.isArray(val) === false;
+};
+},{}],"../node_modules/object.pick/index.js":[function(require,module,exports) {
+/*!
+ * object.pick <https://github.com/jonschlinkert/object.pick>
+ *
+ * Copyright (c) 2014-2015 Jon Schlinkert, contributors.
+ * Licensed under the MIT License
+ */
+'use strict';
+
+var isObject = require('isobject');
+
+module.exports = function pick(obj, keys) {
+  if (!isObject(obj) && typeof obj !== 'function') {
+    return {};
+  }
+
+  var res = {};
+
+  if (typeof keys === 'string') {
+    if (keys in obj) {
+      res[keys] = obj[keys];
+    }
+
+    return res;
+  }
+
+  var len = keys.length;
+  var idx = -1;
+
+  while (++idx < len) {
+    var key = keys[idx];
+
+    if (key in obj) {
+      res[key] = obj[key];
+    }
+  }
+
+  return res;
+};
+},{"isobject":"../node_modules/isobject/index.js"}],"../node_modules/react-dotdotdot/src/index.js":[function(require,module,exports) {
+var React = require('react');
+var clamp = require('./clamp.js');
+var pick = require('object.pick');
+var PropTypes = require('prop-types');
+var ReactDOM = require('react-dom');
+
+/**
+ * multuline text-overflow: ellipsis
+ */
+function Dotdotdot() {
+  if(!(this instanceof Dotdotdot)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+  this.update = this.update.bind(this);
+  this.getContainerRef = function (container) {
+    this.container = container;
+  }.bind(this);
+}
+
+Dotdotdot.prototype = Object.create(React.Component.prototype);
+Dotdotdot.prototype.componentDidMount = function() {
+  window.addEventListener('resize', this.update, false);
+  // NOTE: It's possible, not all fonts are loaded on window.load
+  window.addEventListener('load', this.update, false);
+  this.dotdotdot(ReactDOM.findDOMNode(this.container));
+};
+Dotdotdot.prototype.componentWillUnmount = function() {
+  window.removeEventListener('resize', this.update, false);
+  window.removeEventListener('load', this.update, false);
+};
+Dotdotdot.prototype.componentDidUpdate = function() {
+  this.dotdotdot(ReactDOM.findDOMNode(this.container));
+};
+
+Dotdotdot.prototype.dotdotdot = function(container) {
+  if (!container) {
+    return;
+  }
+
+  if (this.props.clamp) {
+    if (container.length) {
+      throw new Error('Please provide exacly one child to dotdotdot');
+    }
+    clamp(container, pick(this.props, [
+      'animate',
+      'clamp',
+      'splitOnChars',
+      'truncationChar',
+      'truncationHTML',
+      'useNativeClamp'
+    ]));
+  };
+};
+Dotdotdot.prototype.update = function() {
+    this.forceUpdate();
+};
+
+Dotdotdot.prototype.render = function() {
+  return React.createElement(
+    this.props.tagName,
+    {
+      ref: this.getContainerRef,
+      className: this.props.className
+    },
+    this.props.children
+  );
+};
+
+// Statics:
+Dotdotdot.propTypes = {
+  children: PropTypes.node,
+  clamp: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.bool
+  ]).isRequired,
+  truncationChar: PropTypes.string,
+  useNativeClamp: PropTypes.bool,
+  className: PropTypes.string,
+  tagName: PropTypes.string
+};
+
+Dotdotdot.defaultProps = {
+  truncationChar: '\u2026',
+  useNativeClamp: false,
+  tagName: 'div'
+};
+
+module.exports = Dotdotdot;
+
+},{"react":"../node_modules/react/index.js","./clamp.js":"../node_modules/react-dotdotdot/src/clamp.js","object.pick":"../node_modules/object.pick/index.js","prop-types":"../node_modules/prop-types/index.js","react-dom":"../node_modules/react-dom/index.js"}],"components/movie-card/movie-card.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/movie-card/movie-card.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -47877,6 +48329,10 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 
 var _Card = _interopRequireDefault(require("react-bootstrap/Card"));
+
+var _reactDotdotdot = _interopRequireDefault(require("react-dotdotdot"));
+
+require("./movie-card.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -47922,7 +48378,9 @@ var MovieCard = /*#__PURE__*/function (_React$Component) {
       return /*#__PURE__*/_react.default.createElement(_Card.default, null, /*#__PURE__*/_react.default.createElement(_Card.default.Img, {
         variant: "top",
         src: movie.ImageURL
-      }), /*#__PURE__*/_react.default.createElement(_Card.default.Body, null, /*#__PURE__*/_react.default.createElement(_Card.default.Title, null, movie.Title), /*#__PURE__*/_react.default.createElement(_Card.default.Text, null, movie.Synopsis), /*#__PURE__*/_react.default.createElement(_Button.default, {
+      }), /*#__PURE__*/_react.default.createElement(_Card.default.Body, null, /*#__PURE__*/_react.default.createElement(_Card.default.Title, null, movie.Title), /*#__PURE__*/_react.default.createElement(_reactDotdotdot.default, {
+        clamp: 5
+      }, /*#__PURE__*/_react.default.createElement(_Card.default.Text, null, movie.Synopsis)), /*#__PURE__*/_react.default.createElement(_Button.default, {
         onClick: function onClick() {
           return _onClick(movie);
         },
@@ -47943,7 +48401,12 @@ MovieCard.propTypes = {
   }).isRequired,
   onClick: _propTypes.default.func.isRequired
 };
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Card":"../node_modules/react-bootstrap/esm/Card.js"}],"components/movie-view/movie-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Card":"../node_modules/react-bootstrap/esm/Card.js","react-dotdotdot":"../node_modules/react-dotdotdot/src/index.js","./movie-card.scss":"components/movie-card/movie-card.scss"}],"components/movie-view/movie-view.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/movie-view/movie-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -47954,6 +48417,10 @@ exports.default = void 0;
 var _react = _interopRequireDefault(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
+
+var _reactBootstrap = require("react-bootstrap");
+
+require("./movie-view.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -47996,59 +48463,54 @@ var MovieView = /*#__PURE__*/function (_React$Component) {
       var _this$props = this.props,
           movie = _this$props.movie,
           onBackClick = _this$props.onBackClick;
-      return /*#__PURE__*/_react.default.createElement("div", {
-        className: "movie-view"
-      }, /*#__PURE__*/_react.default.createElement("div", {
-        className: "movie-poster"
-      }, /*#__PURE__*/_react.default.createElement("img", {
+      return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Row, {
+        className: "main-view justify-content-md-center"
+      }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
+        md: 6
+      }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Img, {
         src: movie.ImageURL
-      })), /*#__PURE__*/_react.default.createElement("div", {
-        className: "movie-title"
-      }, /*#__PURE__*/_react.default.createElement("span", {
-        className: "label"
-      }, "Title: "), /*#__PURE__*/_react.default.createElement("span", {
-        className: "value"
-      }, movie.Title)), /*#__PURE__*/_react.default.createElement("div", {
-        className: "movie-release"
-      }, /*#__PURE__*/_react.default.createElement("span", {
-        className: "label"
-      }, "Release: "), /*#__PURE__*/_react.default.createElement("span", {
-        className: "value"
-      }, movie.Release)), /*#__PURE__*/_react.default.createElement("div", {
-        className: "movie-synopsis"
-      }, /*#__PURE__*/_react.default.createElement("span", {
-        className: "label"
-      }, "Synopsis: "), /*#__PURE__*/_react.default.createElement("span", {
-        className: "value"
-      }, movie.Synopsis)), /*#__PURE__*/_react.default.createElement("div", {
-        className: "movie-directors"
-      }, /*#__PURE__*/_react.default.createElement("span", {
-        className: "label"
-      }, "Directors: "), /*#__PURE__*/_react.default.createElement("span", {
-        className: "value"
-      }, movie.Directors.map(function (director) {
+      }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, movie.Title), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Release: ".concat(movie.Release)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Synopsis: ".concat(movie.Synopsis)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Directors: ".concat(movie.Directors.map(function (director) {
         return director.Name;
-      }).join(', '))), /*#__PURE__*/_react.default.createElement("div", {
-        className: "movie-actors"
-      }, /*#__PURE__*/_react.default.createElement("span", {
-        className: "label"
-      }, "Actors: "), /*#__PURE__*/_react.default.createElement("span", {
-        className: "value"
-      }, movie.Actors.map(function (director) {
-        return director.Name;
-      }).join(', '))), /*#__PURE__*/_react.default.createElement("div", {
-        className: "movie-genres"
-      }, /*#__PURE__*/_react.default.createElement("span", {
-        className: "label"
-      }, "Genres: "), /*#__PURE__*/_react.default.createElement("span", {
-        className: "value"
-      }, movie.Genres.map(function (genre) {
+      }).join(', '))), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Actors: ".concat(movie.Actors.map(function (actor) {
+        return actor.Name;
+      }).join(', '))), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Genres: ".concat(movie.Genres.map(function (genre) {
         return genre.Name;
-      }).join(', '))), /*#__PURE__*/_react.default.createElement("button", {
+      }).join(', '))), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
         onClick: function onClick() {
           return onBackClick(null);
-        }
-      }, "Back"));
+        },
+        variant: "link"
+      }, "Back"))))) // <div className="movie-view">
+      //     <div className="movie-poster">
+      //         <img src={movie.ImageURL}/>
+      //     </div>
+      //     <div className="movie-title">
+      //         <span className="label">Title: </span>
+      //         <span className="value">{movie.Title}</span>
+      //     </div>
+      //     <div className="movie-release">
+      //         <span className="label">Release: </span>
+      //         <span className="value">{movie.Release}</span>
+      //     </div>
+      //     <div className="movie-synopsis">
+      //         <span className="label">Synopsis: </span>
+      //         <span className="value">{movie.Synopsis}</span>
+      //     </div>
+      //     <div className="movie-directors">
+      //         <span className="label">Directors: </span>
+      //         <span className="value">{movie.Directors.map((director) => director.Name).join(', ')}</span>
+      //     </div>
+      //     <div className="movie-actors">
+      //         <span className="label">Actors: </span>
+      //         <span className="value">{movie.Actors.map((director) => director.Name).join(', ')}</span>
+      //     </div>
+      //     <div className="movie-genres">
+      //         <span className="label">Genres: </span>
+      //         <span className="value">{movie.Genres.map((genre) => genre.Name).join(', ')}</span>
+      //     </div>
+      //     <button onClick={() => onBackClick(null)}>Back</button>
+      // </div>
+      ;
     }
   }]);
 
@@ -48068,7 +48530,7 @@ MovieView.propTypes = {
   }).isRequired,
   onBackClick: _propTypes.default.func.isRequired
 };
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js"}],"../node_modules/email-validator/index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","./movie-view.scss":"components/movie-view/movie-view.scss"}],"../node_modules/email-validator/index.js":[function(require,module,exports) {
 "use strict";
 
 var tester = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/; // Thanks to:
@@ -48220,7 +48682,12 @@ RegisterView.propTypes = {
   }),
   onRegister: _propTypes.default.func.isRequired
 };
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","email-prop-type":"../node_modules/email-prop-type/build/index.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js"}],"components/main-view/main-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","email-prop-type":"../node_modules/email-prop-type/build/index.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js"}],"components/main-view/main-view.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/main-view/main-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -48243,6 +48710,8 @@ var _movieCard = _interopRequireDefault(require("../movie-card/movie-card"));
 var _movieView = _interopRequireDefault(require("../movie-view/movie-view"));
 
 var _registerView = _interopRequireDefault(require("../register-view/register-view"));
+
+require("./main-view.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -48359,7 +48828,8 @@ var MainView = /*#__PURE__*/function (_React$Component) {
         }
       })) : movies.map(function (movie) {
         return /*#__PURE__*/_react.default.createElement(_Col.default, {
-          md: 3
+          md: 3,
+          sm: 6
         }, /*#__PURE__*/_react.default.createElement(_movieCard.default, {
           key: movie._id,
           movie: movie,
@@ -48375,7 +48845,7 @@ var MainView = /*#__PURE__*/function (_React$Component) {
 }(_react.default.Component);
 
 exports.default = MainView;
-},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","react-bootstrap/Row":"../node_modules/react-bootstrap/esm/Row.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","../login-view/login-view":"components/login-view/login-view.jsx","../movie-card/movie-card":"components/movie-card/movie-card.jsx","../movie-view/movie-view":"components/movie-view/movie-view.jsx","../register-view/register-view":"components/register-view/register-view.jsx"}],"index.scss":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","react-bootstrap/Row":"../node_modules/react-bootstrap/esm/Row.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","../login-view/login-view":"components/login-view/login-view.jsx","../movie-card/movie-card":"components/movie-card/movie-card.jsx","../movie-view/movie-view":"components/movie-view/movie-view.jsx","../register-view/register-view":"components/register-view/register-view.jsx","./main-view.scss":"components/main-view/main-view.scss"}],"index.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -48471,7 +48941,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51298" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51184" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

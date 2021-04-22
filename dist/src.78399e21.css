@@ -8,6 +8,9 @@
     max-width: 320px;
   }
 }
+div.card {
+  margin-bottom: 15px;
+}
 .my-flix {
   color: steelblue;
 }
