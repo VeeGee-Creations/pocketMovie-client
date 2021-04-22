@@ -40,33 +40,6 @@ export default function RegisterView(props) {
                 <Button block size="lg" type="submit" disabled={!validateForm()}>Register</Button>
             </Form>
         </div>
-        // <form>
-        //     <div>
-        //         <label>
-        //             Username:
-        //             <input type="text" value={username} onChange={e => setUsername(e.target.value)}/>
-        //         </label>
-        //     </div>
-        //     <div>
-        //         <label>
-        //             Email:
-        //             <input type="text" value={email} onChange={e => setEmail(e.target.value)}/>
-        //         </label>
-        //     </div>
-        //     <div>
-        //         <label>
-        //             Password:
-        //             <input type="password" value={password} onChange={e => setPassword(e.target.value)}/>
-        //         </label>
-        //     </div>
-        //     <div>
-        //         <label>
-        //             Birthday:
-        //             <input type="date" placeholder="dd/mm/yyyy" value={birthday} onChange={e => setBirthday(e.target.value)}/>
-        //         </label>
-        //     </div>
-        //     <button type="submit" onClick={handleSubmit}>Register</button>
-        // </form>
     );
 }
 
