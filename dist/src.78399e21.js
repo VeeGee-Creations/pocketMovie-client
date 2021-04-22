@@ -47770,10 +47770,6 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
 
-var _Row = _interopRequireDefault(require("react-bootstrap/Row"));
-
-var _Col = _interopRequireDefault(require("react-bootstrap/Col"));
-
 require("./login-view.scss");
 
 var _reactBootstrap = require("react-bootstrap");
@@ -47814,34 +47810,48 @@ function LoginView(props) {
   };
 
   var handleRegister = function handleRegister() {
-    props.onRegister(false);
+    return props.onRegister(false);
   };
 
-  return /*#__PURE__*/_react.default.createElement(_Row.default, {
-    className: "justify-content-md-center h-100"
-  }, /*#__PURE__*/_react.default.createElement(_Col.default, {
-    className: "col-center",
-    md: "3"
-  }, /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("label", null, "Username:", /*#__PURE__*/_react.default.createElement("input", {
+  var validateForm = function validateForm() {
+    return username.length > 0 && password.length > 0;
+  };
+
+  return /*#__PURE__*/_react.default.createElement("div", {
+    className: "Login"
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form, {
+    onSubmit: handleSubmit
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
+    size: "lg",
+    controlId: "username"
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Label, null, "Username"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Control, {
+    autoFocus: true,
     type: "text",
     value: username,
     onChange: function onChange(e) {
       return setUsername(e.target.value);
     }
-  }))), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("label", null, "Password:", /*#__PURE__*/_react.default.createElement("input", {
+  })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
+    size: "lg",
+    controlId: "password"
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Label, null, "Password"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Control, {
     type: "password",
     value: password,
     onChange: function onChange(e) {
       return setPassword(e.target.value);
     }
-  }))), /*#__PURE__*/_react.default.createElement(_Button.default, {
+  })), /*#__PURE__*/_react.default.createElement(_Button.default, {
+    block: true,
+    size: "lg",
     type: "submit",
-    onClick: handleSubmit
+    disabled: !validateForm()
   }, "Login"), /*#__PURE__*/_react.default.createElement(_Button.default, {
     className: "register-button",
+    block: true,
+    size: "lg",
     type: "button",
     onClick: handleRegister
-  }, "Register"))));
+  }, "Register")));
 }
 
 LoginView.propTypes = {
@@ -47852,7 +47862,7 @@ LoginView.propTypes = {
   onLoggedIn: _propTypes.default.func.isRequired,
   onRegister: _propTypes.default.func.isRequired
 };
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","react-bootstrap/Row":"../node_modules/react-bootstrap/esm/Row.js","react-bootstrap/Col":"../node_modules/react-bootstrap/esm/Col.js","./login-view.scss":"components/login-view/login-view.scss","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js"}],"components/movie-card/movie-card.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js","./login-view.scss":"components/login-view/login-view.scss","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js"}],"components/movie-card/movie-card.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -48098,6 +48108,10 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _emailPropType = _interopRequireDefault(require("email-prop-type"));
 
+var _Form = _interopRequireDefault(require("react-bootstrap/Form"));
+
+var _Button = _interopRequireDefault(require("react-bootstrap/Button"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -48143,35 +48157,85 @@ function RegisterView(props) {
     console.log(username, email, password, birthday);
   };
 
-  return /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("label", null, "Username:", /*#__PURE__*/_react.default.createElement("input", {
+  var validateForm = function validateForm() {
+    return username.length > 0 && email.length > 0 && password.length > 0 && birthday.length > 0;
+  };
+
+  return /*#__PURE__*/_react.default.createElement("div", {
+    className: "Register"
+  }, /*#__PURE__*/_react.default.createElement(_Form.default, {
+    onSubmit: handleSubmit
+  }, /*#__PURE__*/_react.default.createElement(_Form.default.Group, {
+    size: "lg",
+    controlId: "username"
+  }, /*#__PURE__*/_react.default.createElement(_Form.default.Label, null, "Username"), /*#__PURE__*/_react.default.createElement(_Form.default.Control, {
+    autoFocus: true,
     type: "text",
     value: username,
     onChange: function onChange(e) {
       return setUsername(e.target.value);
     }
-  }))), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("label", null, "Email:", /*#__PURE__*/_react.default.createElement("input", {
-    type: "text",
+  })), /*#__PURE__*/_react.default.createElement(_Form.default.Group, {
+    size: "lg",
+    controlId: "email"
+  }, /*#__PURE__*/_react.default.createElement(_Form.default.Label, null, "Email"), /*#__PURE__*/_react.default.createElement(_Form.default.Control, {
+    autoFocus: true,
+    type: "email",
     value: email,
     onChange: function onChange(e) {
       return setEmail(e.target.value);
     }
-  }))), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("label", null, "Password:", /*#__PURE__*/_react.default.createElement("input", {
+  })), /*#__PURE__*/_react.default.createElement(_Form.default.Group, {
+    size: "lg",
+    controlId: "password"
+  }, /*#__PURE__*/_react.default.createElement(_Form.default.Label, null, "Password"), /*#__PURE__*/_react.default.createElement(_Form.default.Control, {
     type: "password",
     value: password,
     onChange: function onChange(e) {
       return setPassword(e.target.value);
     }
-  }))), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("label", null, "Birthday:", /*#__PURE__*/_react.default.createElement("input", {
+  })), /*#__PURE__*/_react.default.createElement(_Form.default.Group, {
+    size: "lg",
+    controlId: "birthday"
+  }, /*#__PURE__*/_react.default.createElement(_Form.default.Label, null, "Password"), /*#__PURE__*/_react.default.createElement(_Form.default.Control, {
     type: "date",
-    placeholder: "dd/mm/yyyy",
     value: birthday,
     onChange: function onChange(e) {
       return setBirthday(e.target.value);
     }
-  }))), /*#__PURE__*/_react.default.createElement("button", {
+  })), /*#__PURE__*/_react.default.createElement(_Button.default, {
+    block: true,
+    size: "lg",
     type: "submit",
-    onClick: handleSubmit
-  }, "Register"));
+    disabled: !validateForm()
+  }, "Register"))) // <form>
+  //     <div>
+  //         <label>
+  //             Username:
+  //             <input type="text" value={username} onChange={e => setUsername(e.target.value)}/>
+  //         </label>
+  //     </div>
+  //     <div>
+  //         <label>
+  //             Email:
+  //             <input type="text" value={email} onChange={e => setEmail(e.target.value)}/>
+  //         </label>
+  //     </div>
+  //     <div>
+  //         <label>
+  //             Password:
+  //             <input type="password" value={password} onChange={e => setPassword(e.target.value)}/>
+  //         </label>
+  //     </div>
+  //     <div>
+  //         <label>
+  //             Birthday:
+  //             <input type="date" placeholder="dd/mm/yyyy" value={birthday} onChange={e => setBirthday(e.target.value)}/>
+  //         </label>
+  //     </div>
+  //     <button type="submit" onClick={handleSubmit}>Register</button>
+  // </form>
+  ;
 }
 
 RegisterView.propTypes = {
@@ -48183,7 +48247,7 @@ RegisterView.propTypes = {
   }),
   onRegister: _propTypes.default.func.isRequired
 };
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","email-prop-type":"../node_modules/email-prop-type/build/index.js"}],"components/main-view/main-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","email-prop-type":"../node_modules/email-prop-type/build/index.js","react-bootstrap/Form":"../node_modules/react-bootstrap/esm/Form.js","react-bootstrap/Button":"../node_modules/react-bootstrap/esm/Button.js"}],"components/main-view/main-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -48434,7 +48498,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58253" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51298" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
