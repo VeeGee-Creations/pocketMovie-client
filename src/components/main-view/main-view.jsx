@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import axios from 'axios';
 import {Row, Col, Spinner} from 'react-bootstrap';
 
@@ -17,6 +17,7 @@ export default class MainView extends React.Component {
             selectedMovie: null,
             user: null,
             registered: true,
+            scrollPosition: 0,
         };
     }
 
@@ -51,12 +52,12 @@ export default class MainView extends React.Component {
         });
     }
 
-    executeScroll = (myRef) => {
-        myRef.scrollIntoView({block: 'start',});
+    setScrollPosition(position) {
+        this.setState({scrollPosition: position});
     }
 
     render() {
-        const {movies, selectedMovie, user, registered} = this.state;
+        const {movies, selectedMovie, user, registered, scrollPosition} = this.state;
 
         if(!registered) return <RegisterView onRegister={register => this.onRegister(register)}/>;
 
@@ -69,12 +70,12 @@ export default class MainView extends React.Component {
                 {selectedMovie 
                     ? (
                         <Col md={8}>
-                            <MovieView movie={selectedMovie} onBackClick={newSelectedMovie => this.onMovieClick(newSelectedMovie)}/>
+                            <MovieView movie={selectedMovie} scrollPosition={scrollPosition} onBackClick={newSelectedMovie => this.onMovieClick(newSelectedMovie)}/>
                         </Col>
                     )
                     : movies.map((movie, index) => (
                         <Col md={3} sm={6} key={index}>
-                            <MovieCard key={movie._id} ref={movie._id} movie={movie} onClick={movie => this.onMovieClick(movie)}/>
+                            <MovieCard key={movie._id} movie={movie} onClick={movie => {this.setScrollPosition(window.pageYOffset); this.onMovieClick(movie)}}/>
                         </Col>
                     ))
                 }

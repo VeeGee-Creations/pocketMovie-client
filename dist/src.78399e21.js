@@ -48411,7 +48411,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
@@ -48420,6 +48420,10 @@ var _reactBootstrap = require("react-bootstrap");
 require("./movie-view.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -48460,12 +48464,25 @@ var MovieView = /*#__PURE__*/function (_React$Component) {
       window.scrollTo(0, 0);
     }
   }, {
+    key: "returnToMovie",
+    value: function returnToMovie(position) {
+      setTimeout(function () {
+        return window.scrollTo({
+          left: 0,
+          top: parseInt(position),
+          behavior: 'smooth'
+        });
+      }), 2;
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this = this;
+
       var _this$props = this.props,
           movie = _this$props.movie,
           onBackClick = _this$props.onBackClick,
-          myRef = _this$props.myRef;
+          scrollPosition = _this$props.scrollPosition;
       return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Row, {
         className: "main-view justify-content-md-center"
       }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
@@ -48486,7 +48503,8 @@ var MovieView = /*#__PURE__*/function (_React$Component) {
       }).join(', '))), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
         onClick: function onClick() {
           onBackClick(null);
-          window.scrollTo(0, 0);
+
+          _this.returnToMovie(scrollPosition);
         },
         variant: "link"
       }, "Back")))));
@@ -48681,7 +48699,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
 var _axios = _interopRequireDefault(require("axios"));
 
@@ -48698,6 +48716,10 @@ var _registerView = _interopRequireDefault(require("../register-view/register-vi
 require("./main-view.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -48721,8 +48743,6 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 var MainView = /*#__PURE__*/function (_React$Component) {
   _inherits(MainView, _React$Component);
 
@@ -48734,18 +48754,12 @@ var MainView = /*#__PURE__*/function (_React$Component) {
     _classCallCheck(this, MainView);
 
     _this = _super.call(this);
-
-    _defineProperty(_assertThisInitialized(_this), "executeScroll", function (myRef) {
-      myRef.scrollIntoView({
-        block: 'start'
-      });
-    });
-
     _this.state = {
       movies: null,
       selectedMovie: null,
       user: null,
-      registered: true
+      registered: true,
+      scrollPosition: 0
     };
     return _this;
   }
@@ -48785,6 +48799,13 @@ var MainView = /*#__PURE__*/function (_React$Component) {
       });
     }
   }, {
+    key: "setScrollPosition",
+    value: function setScrollPosition(position) {
+      this.setState({
+        scrollPosition: position
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this3 = this;
@@ -48793,7 +48814,8 @@ var MainView = /*#__PURE__*/function (_React$Component) {
           movies = _this$state.movies,
           selectedMovie = _this$state.selectedMovie,
           user = _this$state.user,
-          registered = _this$state.registered;
+          registered = _this$state.registered,
+          scrollPosition = _this$state.scrollPosition;
       if (!registered) return /*#__PURE__*/_react.default.createElement(_registerView.default, {
         onRegister: function onRegister(register) {
           return _this3.onRegister(register);
@@ -48817,6 +48839,7 @@ var MainView = /*#__PURE__*/function (_React$Component) {
         md: 8
       }, /*#__PURE__*/_react.default.createElement(_movieView.default, {
         movie: selectedMovie,
+        scrollPosition: scrollPosition,
         onBackClick: function onBackClick(newSelectedMovie) {
           return _this3.onMovieClick(newSelectedMovie);
         }
@@ -48827,10 +48850,11 @@ var MainView = /*#__PURE__*/function (_React$Component) {
           key: index
         }, /*#__PURE__*/_react.default.createElement(_movieCard.default, {
           key: movie._id,
-          ref: movie._id,
           movie: movie,
           onClick: function onClick(movie) {
-            return _this3.onMovieClick(movie);
+            _this3.setScrollPosition(window.pageYOffset);
+
+            _this3.onMovieClick(movie);
           }
         }));
       }));

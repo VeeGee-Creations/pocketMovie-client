@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 
@@ -10,8 +10,12 @@ export default class MovieView extends React.Component {
         window.scrollTo(0, 0)
     }
 
+    returnToMovie(position) {
+        setTimeout(() => window.scrollTo({left: 0, top: parseInt(position), behavior: 'smooth'})), 2;
+    }
+
     render() {
-        const {movie, onBackClick, myRef} = this.props;
+        const {movie, onBackClick, scrollPosition} = this.props;
 
         return(
             <Row className="main-view justify-content-md-center">
@@ -26,7 +30,7 @@ export default class MovieView extends React.Component {
                     <Card.Text>{`Actors: ${movie.Actors.map((actor) => actor.Name).join(', ')}`}</Card.Text>
                     <Card.Text>{`Genres: ${movie.Genres.map((genre) => genre.Name).join(', ')}`}</Card.Text>
 
-                    <Button onClick={() => {onBackClick(null); window.scrollTo(0, 0)}} variant="link">Back</Button>
+                    <Button onClick={() => {onBackClick(null); this.returnToMovie(scrollPosition)}} variant="link">Back</Button>
                 </Card.Body>
             </Card>
             </Col>
