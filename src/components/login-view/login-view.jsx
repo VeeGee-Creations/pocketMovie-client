@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Button, Card, Form} from 'react-bootstrap';
+import axios from 'axios';
 
 import './login-view.scss';
 
@@ -10,8 +11,15 @@ export default function LoginView(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        props.onLoggedIn(username);
-        console.log(username, password);
+        axios.post('https://pocket-movies.herokuapp.com/login', {
+            Username: username,
+            Password: password
+        })
+        .then(res => {
+            const data = res.data;
+            props.onLoggedIn(data);
+        })
+        .catch(e => console.log('no such user'));
     };
 
     const handleRegister = () => props.onRegister(false);

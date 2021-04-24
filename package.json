@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/VeeGee-Creations/pocketMovie-client/issues"
   },
-  "homepage": "https://github.com/VeeGee-Creations/pocketMovie-client#readme",
+  "homepage": "https://veegee-creations.github.io/pocketMovie-client/",
   "dependencies": {
     "axios": "^0.21.1",
     "bootswatch": "^4.6.0",
@@ -32,6 +32,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "cssnano": "^5.0.1",
     "sass": "^1.32.8"
   }
 }
