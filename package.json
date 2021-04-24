@@ -16,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/VeeGee-Creations/pocketMovie-client/issues"
   },
-  "homepage": ".",
+  "homepage": "https://veegee-creations.github.io/pocketMovie-client",
   "dependencies": {
     "axios": "^0.21.1",
     "bootswatch": "^4.6.0",
