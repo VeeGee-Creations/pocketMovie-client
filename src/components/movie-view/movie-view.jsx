@@ -11,7 +11,7 @@ export default class MovieView extends React.Component {
     }
 
     render() {
-        const {movie, onBackClick, myRef} = this.props;
+        const {movie, onBackClick} = this.props;
 
         return(
             <Row className="main-view justify-content-md-center">

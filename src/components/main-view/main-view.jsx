@@ -6,8 +6,7 @@ import LoginView from '../login-view/login-view';
 import MovieCard from '../movie-card/movie-card';
 import MovieView from '../movie-view/movie-view';
 import RegisterView from '../register-view/register-view';
-
-import './main-view.scss'
+import Header from '../header/header';
 
 export default class MainView extends React.Component {
     constructor() {
@@ -21,16 +20,37 @@ export default class MainView extends React.Component {
     }
 
     componentDidMount() {
+        const accessToken = localStorage.getItem('token');
+        if(accessToken !== null) {
+            this.setState({
+                user: localStorage.getItem('user')
+            });
+            this.getMovies(accessToken);
+        }
+    }
 
-        axios.get('https://pocket-movies.herokuapp.com/movies')
+    getMovies(token) {
+        axios.get('https://pocket-movies.herokuapp.com/movies', {
+            headers: {Authorization: `Bearer ${token}`}
+        })
         .then(res => {
             this.setState({
                 movies: res.data
             });
         })
-        .catch(err => {
-            console.error(err);
-        });
+        .catch(err => console.error(err));
+    }
+    
+    onSearch(searchParams) {
+        axios.get(`https://pocket-movies.herokuapp.com/movies/${searchParams}`, {
+            headers: {Authorization: `Bearer ${token}`}
+        })
+        .then(res => {
+            this.setState({
+                movies: res.data
+            });
+        })
+        .catch(err => console.error(err));
     }
 
     onMovieClick(movie) {
@@ -39,15 +59,28 @@ export default class MainView extends React.Component {
         });
     }
 
-    onLoggedIn(user) {
+    onLoggedIn(authData) {
+        console.log(authData);
         this.setState({
-            user
+            user: authData.user.Username
         });
+
+        localStorage.setItem('token', authData.token);
+        localStorage.setItem('user', authData.user.Username);
+            this.getMovies(authData.token);
     }
 
     onRegister(register) {
         this.setState({
             registered: register
+        });
+    }
+
+    onLogout(setNull) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        this.setState({
+            user: setNull
         });
     }
 
@@ -65,20 +98,23 @@ export default class MainView extends React.Component {
         if(!movies) return <Spinner animation="border" role="status"/>;
         
         return(
-            <Row className="main-view justify-content-md-center">
-                {selectedMovie 
-                    ? (
-                        <Col md={8}>
-                            <MovieView movie={selectedMovie} onBackClick={newSelectedMovie => this.onMovieClick(newSelectedMovie)}/>
-                        </Col>
-                    )
-                    : movies.map((movie, index) => (
-                        <Col md={3} sm={6} key={index}>
-                            <MovieCard key={movie._id} ref={movie._id} movie={movie} onClick={movie => this.onMovieClick(movie)}/>
-                        </Col>
-                    ))
-                }
-            </Row>
+            <div>
+                <Header onLogout={setNull => this.onLogout(setNull)} onSearch={searchParams => this.onSearch(searchParams)}/>
+                <Row className="main-view justify-content-md-center">
+                    {selectedMovie 
+                        ? (
+                            <Col md={8}>
+                                <MovieView movie={selectedMovie} onBackClick={newSelectedMovie => this.onMovieClick(newSelectedMovie)}/>
+                            </Col>
+                        )
+                        : movies.map((movie, index) => (
+                            <Col md={3} sm={6} key={index}>
+                                <MovieCard key={movie._id} ref={movie._id} movie={movie} onClick={movie => this.onMovieClick(movie)}/>
+                            </Col>
+                        ))
+                    }
+                </Row>
+            </div>
         );
     }
 }

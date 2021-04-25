@@ -39,7 +39,7 @@ export default function RegisterView(props) {
                     <Form.Control type="date" value={birthday} onChange={e => setBirthday(e.target.value)}/>
                 </Form.Group>
                 <Button block size="lg" type="submit" disabled={!validateForm()}>Register</Button>
-                <Button block size="lg" variant="link" onClick={() => props.onRegister(true)}>Return to Login</Button>
+                <Button block size="lg" variant="link" onClick={() => props.onRegister(true)}>Login</Button>
             </Form>
         </div>
     );
