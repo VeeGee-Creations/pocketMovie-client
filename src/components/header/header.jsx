@@ -10,8 +10,8 @@ export default function Header(props) {
 
     const handleSearch= (e) =>{
         e.preventDefault();
-        console.log(searchParam);
-        props.onSearch(searchParam);
+        const accessToken = localStorage.getItem('token');
+        props.onSearch(searchParam, accessToken);
     }
 
     return (

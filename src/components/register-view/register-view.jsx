@@ -13,7 +13,6 @@ export default function RegisterView(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
         props.onRegister(true);
-        console.log(username, email, password, birthday);
     };
 
     const validateForm = () => username.length > 0 && email.length > 0 && password.length > 0 && birthday.length > 0;

@@ -44,14 +44,11 @@ export default class MainView extends React.Component {
         .catch(err => console.error(err));
     }
     
-    onSearch(searchParams) {
-        const token = localStorage.getItem('token');
-        console.log(token);
+    onSearch(searchParams, token) {
         axios.get(`https://pocket-movies.herokuapp.com/movies/${searchParams}`, {
             headers: {Authorization: `Bearer ${token}`}
         })
         .then(res => {
-            console.log(res.data);
             this.setState({
                 movies: res.data
             });
@@ -66,7 +63,6 @@ export default class MainView extends React.Component {
     }
 
     onLoggedIn(authData) {
-        console.log(authData);
         this.setState({
             user: authData.user.Username
         });
@@ -105,7 +101,7 @@ export default class MainView extends React.Component {
         
         return(
             <div>
-                <Header onLogout={setNull => this.onLogout(setNull)} onSearch={searchParams => this.onSearch(searchParams)}/>
+                <Header onLogout={setNull => this.onLogout(setNull)} onSearch={(searchParams, accessToken) => this.onSearch(searchParams, accessToken)}/>
                 <Row className="main-view justify-content-md-center">
                     {selectedMovie 
                         ? (

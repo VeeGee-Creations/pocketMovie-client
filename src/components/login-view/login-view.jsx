@@ -18,9 +18,8 @@ export default function LoginView(props) {
         .then(res => {
             const data = res.data;
             props.onLoggedIn(data);
-            console.log(data);
         })
-        .catch(e => console.log('no such user'));
+        .catch(e => console.error('no such user'));
     };
 
     const handleRegister = () => props.onRegister(false);
