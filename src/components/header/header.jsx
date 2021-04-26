@@ -7,8 +7,10 @@ export default function Header(props) {
     const [searchParam, setSearchParam] = useState('');
 
     const handleLogout = () => props.onLogout(false);
+
     const handleSearch= (e) =>{
         e.preventDefault();
+        console.log(searchParam);
         props.onSearch(searchParam);
     }
 
@@ -21,7 +23,7 @@ export default function Header(props) {
             <Navbar.Collapse id="basic-navbar-nav">
                 <Form inline className="ml-auto justify-content-md-center">
                     <FormControl type="text" placeholder="Search" value={searchParam} onChange={e => setSearchParam(e.target.value)} size="lg" className="mr=sm-2"/>
-                    <Button variant="outline-success">Search</Button>
+                    <Button type="submit" variant="outline-success" onClick={handleSearch}>Search</Button>
                 </Form>
                 <Nav className="ml-auto">
                     <Nav.Link href="#">Featured</Nav.Link>

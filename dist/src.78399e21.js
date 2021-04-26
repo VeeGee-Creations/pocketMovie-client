@@ -48473,11 +48473,25 @@ var MovieView = /*#__PURE__*/function (_React$Component) {
       window.scrollTo(0, 0);
     }
   }, {
+    key: "returnToMovie",
+    value: function returnToMovie(position) {
+      setTimeout(function () {
+        return window.scrollTo({
+          left: 0,
+          top: parseInt(position),
+          behavior: 'smooth'
+        });
+      }), 2;
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this = this;
+
       var _this$props = this.props,
           movie = _this$props.movie,
-          onBackClick = _this$props.onBackClick;
+          onBackClick = _this$props.onBackClick,
+          scrollPosition = _this$props.scrollPosition;
       return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Row, {
         className: "main-view justify-content-md-center"
       }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
@@ -48498,7 +48512,8 @@ var MovieView = /*#__PURE__*/function (_React$Component) {
       }).join(', '))), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
         onClick: function onClick() {
           onBackClick(null);
-          window.scrollTo(0, 0);
+
+          _this.returnToMovie(scrollPosition);
         },
         variant: "link"
       }, "Back")))));
@@ -48727,6 +48742,7 @@ function Header(props) {
 
   var handleSearch = function handleSearch(e) {
     e.preventDefault();
+    console.log(searchParam);
     props.onSearch(searchParam);
   };
 
@@ -48752,7 +48768,9 @@ function Header(props) {
     size: "lg",
     className: "mr=sm-2"
   }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
-    variant: "outline-success"
+    type: "submit",
+    variant: "outline-success",
+    onClick: handleSearch
   }, "Search")), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Nav, {
     className: "ml-auto"
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Nav.Link, {
@@ -48767,7 +48785,12 @@ function Header(props) {
     onClick: handleLogout
   }, "Logout"))));
 }
-},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","./header.scss":"components/header/header.scss"}],"components/main-view/main-view.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","./header.scss":"components/header/header.scss"}],"components/main-view/main-view.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/main-view/main-view.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -48790,6 +48813,8 @@ var _movieView = _interopRequireDefault(require("../movie-view/movie-view"));
 var _registerView = _interopRequireDefault(require("../register-view/register-view"));
 
 var _header = _interopRequireDefault(require("../header/header"));
+
+require("./main-view.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -48815,8 +48840,6 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 var MainView = /*#__PURE__*/function (_React$Component) {
   _inherits(MainView, _React$Component);
 
@@ -48828,18 +48851,12 @@ var MainView = /*#__PURE__*/function (_React$Component) {
     _classCallCheck(this, MainView);
 
     _this = _super.call(this);
-
-    _defineProperty(_assertThisInitialized(_this), "executeScroll", function (myRef) {
-      myRef.scrollIntoView({
-        block: 'start'
-      });
-    });
-
     _this.state = {
       movies: null,
       selectedMovie: null,
       user: null,
-      registered: true
+      registered: true,
+      scrollPosition: 0
     };
     return _this;
   }
@@ -48878,11 +48895,16 @@ var MainView = /*#__PURE__*/function (_React$Component) {
     value: function onSearch(searchParams) {
       var _this3 = this;
 
+      var token = localStorage.getItem('token');
+      console.log(token);
+
       _axios.default.get("https://pocket-movies.herokuapp.com/movies/".concat(searchParams), {
         headers: {
           Authorization: "Bearer ".concat(token)
         }
       }).then(function (res) {
+        console.log(res.data);
+
         _this3.setState({
           movies: res.data
         });
@@ -48925,6 +48947,13 @@ var MainView = /*#__PURE__*/function (_React$Component) {
       });
     }
   }, {
+    key: "setScrollPosition",
+    value: function setScrollPosition(position) {
+      this.setState({
+        scrollPosition: position
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this4 = this;
@@ -48933,7 +48962,8 @@ var MainView = /*#__PURE__*/function (_React$Component) {
           movies = _this$state.movies,
           selectedMovie = _this$state.selectedMovie,
           user = _this$state.user,
-          registered = _this$state.registered;
+          registered = _this$state.registered,
+          scrollPosition = _this$state.scrollPosition;
       if (!registered) return /*#__PURE__*/_react.default.createElement(_registerView.default, {
         onRegister: function onRegister(register) {
           return _this4.onRegister(register);
@@ -48964,6 +48994,7 @@ var MainView = /*#__PURE__*/function (_React$Component) {
         md: 8
       }, /*#__PURE__*/_react.default.createElement(_movieView.default, {
         movie: selectedMovie,
+        scrollPosition: scrollPosition,
         onBackClick: function onBackClick(newSelectedMovie) {
           return _this4.onMovieClick(newSelectedMovie);
         }
@@ -48974,10 +49005,11 @@ var MainView = /*#__PURE__*/function (_React$Component) {
           key: index
         }, /*#__PURE__*/_react.default.createElement(_movieCard.default, {
           key: movie._id,
-          ref: movie._id,
           movie: movie,
           onClick: function onClick(movie) {
-            return _this4.onMovieClick(movie);
+            _this4.setScrollPosition(window.pageYOffset);
+
+            _this4.onMovieClick(movie);
           }
         }));
       })));
@@ -48988,7 +49020,7 @@ var MainView = /*#__PURE__*/function (_React$Component) {
 }(_react.default.Component);
 
 exports.default = MainView;
-},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","../login-view/login-view":"components/login-view/login-view.jsx","../movie-card/movie-card":"components/movie-card/movie-card.jsx","../movie-view/movie-view":"components/movie-view/movie-view.jsx","../register-view/register-view":"components/register-view/register-view.jsx","../header/header":"components/header/header.jsx"}],"../node_modules/bootswatch/dist/darkly/bootstrap.min.css":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","../login-view/login-view":"components/login-view/login-view.jsx","../movie-card/movie-card":"components/movie-card/movie-card.jsx","../movie-view/movie-view":"components/movie-view/movie-view.jsx","../register-view/register-view":"components/register-view/register-view.jsx","../header/header":"components/header/header.jsx","./main-view.scss":"components/main-view/main-view.scss"}],"../node_modules/bootswatch/dist/darkly/bootstrap.min.css":[function(require,module,exports) {
 
         var reloadCSS = require('_css_loader');
         module.hot.dispose(reloadCSS);

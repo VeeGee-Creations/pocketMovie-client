@@ -8,6 +8,8 @@ import MovieView from '../movie-view/movie-view';
 import RegisterView from '../register-view/register-view';
 import Header from '../header/header';
 
+import './main-view.scss';
+
 export default class MainView extends React.Component {
     constructor() {
         super();
@@ -16,6 +18,7 @@ export default class MainView extends React.Component {
             selectedMovie: null,
             user: null,
             registered: true,
+            scrollPosition: 0,
         };
     }
 
@@ -42,10 +45,13 @@ export default class MainView extends React.Component {
     }
     
     onSearch(searchParams) {
+        const token = localStorage.getItem('token');
+        console.log(token);
         axios.get(`https://pocket-movies.herokuapp.com/movies/${searchParams}`, {
             headers: {Authorization: `Bearer ${token}`}
         })
         .then(res => {
+            console.log(res.data);
             this.setState({
                 movies: res.data
             });
@@ -84,12 +90,12 @@ export default class MainView extends React.Component {
         });
     }
 
-    executeScroll = (myRef) => {
-        myRef.scrollIntoView({block: 'start',});
+    setScrollPosition(position) {
+        this.setState({scrollPosition: position});
     }
 
     render() {
-        const {movies, selectedMovie, user, registered} = this.state;
+        const {movies, selectedMovie, user, registered, scrollPosition} = this.state;
 
         if(!registered) return <RegisterView onRegister={register => this.onRegister(register)}/>;
 
@@ -104,12 +110,12 @@ export default class MainView extends React.Component {
                     {selectedMovie 
                         ? (
                             <Col md={8}>
-                                <MovieView movie={selectedMovie} onBackClick={newSelectedMovie => this.onMovieClick(newSelectedMovie)}/>
+                                <MovieView movie={selectedMovie} scrollPosition={scrollPosition} onBackClick={newSelectedMovie => this.onMovieClick(newSelectedMovie)}/>
                             </Col>
                         )
                         : movies.map((movie, index) => (
                             <Col md={3} sm={6} key={index}>
-                                <MovieCard key={movie._id} ref={movie._id} movie={movie} onClick={movie => this.onMovieClick(movie)}/>
+                                <MovieCard key={movie._id} movie={movie} onClick={movie => {this.setScrollPosition(window.pageYOffset); this.onMovieClick(movie)}}/>
                             </Col>
                         ))
                     }

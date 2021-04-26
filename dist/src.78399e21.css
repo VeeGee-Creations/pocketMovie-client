@@ -8,6 +8,14 @@
     max-width: 320px;
   }
 }
+div.card {
+  height: 625px;
+  margin-bottom: 15px;
+}
+
+img.card-img-top {
+  height: 375px;
+}
 /*!
  * Bootswatch v4.6.0
  * Homepage: https://bootswatch.com
