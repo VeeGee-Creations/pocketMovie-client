@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, Row, Col, Button } from 'react-bootstrap';
-import {Link} from 'react-router-dom';
 
 import './genre-view.scss';
 
@@ -13,14 +12,15 @@ export default class GenreView extends React.Component {
 
     render() {
         const {genre, onBackClick} = this.props;
+        const [{Name, Description}] = genre;
 
         return(
             <Row className="justify-content-md-center">
                 <Col md={9}>
             <Card style={{height: 'auto', marginBottom: '0'}}>
                 <Card.Body>
-                    <Card.Title>{genre.map(genre => genre.Name)}</Card.Title>
-                    <Card.Text>{genre.map(genre => genre.Description)}</Card.Text>
+                    <Card.Title>{Name}</Card.Title>
+                    <Card.Text>{Description}</Card.Text>
                     <Button onClick={() => onBackClick()} variant="link">Back</Button>
                 </Card.Body>
             </Card>

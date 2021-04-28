@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Row, Col, Navbar, Nav, Form, FormControl, Button,} from 'react-bootstrap';
+import {Navbar, Nav, Form, FormControl, Button,} from 'react-bootstrap';
 
 import './header.scss';
 

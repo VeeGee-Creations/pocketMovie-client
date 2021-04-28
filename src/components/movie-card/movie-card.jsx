@@ -9,16 +9,17 @@ import './movie-card.scss';
 export default class MovieCard extends React.Component {
     render() {
         const {movie} = this.props;
+        const {_id: ID, ImageURL, Title, Synopsis, Release} = movie;
         return (
-            <Link className="link" to={`/movies/${movie._id}`}>
+            <Link className="link" to={`/movies/${ID}`}>
             <Card className="pop">
-                <Card.Img variant="top" src={movie.ImageURL}/>
+                <Card.Img variant="top" src={ImageURL}/>
                 <Card.Body>
-                    <Card.Title>{movie.Title}</Card.Title>
+                    <Card.Title>{Title}</Card.Title>
                     <Dotdotdot clamp={5}>
-                        <Card.Text>{movie.Synopsis}</Card.Text>
+                        <Card.Text>{Synopsis}</Card.Text>
                     </Dotdotdot>
-                    <Card.Text style={{marginTop: '20px'}}>{`Release: ${movie.Release}`}</Card.Text>
+                    <Card.Text style={{marginTop: '20px'}}>{`Release: ${Release}`}</Card.Text>
                 </Card.Body>
             </Card>
             </Link>

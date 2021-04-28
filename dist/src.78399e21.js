@@ -51432,21 +51432,26 @@ var MovieCard = /*#__PURE__*/function (_React$Component) {
     key: "render",
     value: function render() {
       var movie = this.props.movie;
+      var ID = movie._id,
+          ImageURL = movie.ImageURL,
+          Title = movie.Title,
+          Synopsis = movie.Synopsis,
+          Release = movie.Release;
       return /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         className: "link",
-        to: "/movies/".concat(movie._id)
+        to: "/movies/".concat(ID)
       }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
         className: "pop"
       }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Img, {
         variant: "top",
-        src: movie.ImageURL
-      }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, movie.Title), /*#__PURE__*/_react.default.createElement(_reactDotdotdot.default, {
+        src: ImageURL
+      }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, Title), /*#__PURE__*/_react.default.createElement(_reactDotdotdot.default, {
         clamp: 5
-      }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, movie.Synopsis)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, {
+      }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, Synopsis)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, {
         style: {
           marginTop: '20px'
         }
-      }, "Release: ".concat(movie.Release)))));
+      }, "Release: ".concat(Release)))));
     }
   }]);
 
@@ -51495,13 +51500,17 @@ function MovieView(props) {
     window.scrollTo(0, 0);
   }, []);
   var movie = props.movie;
+  var Title = movie.Title,
+      Release = movie.Release,
+      Synopsis = movie.Synopsis,
+      Directors = movie.Directors,
+      Actors = movie.Actors,
+      Genres = movie.Genres,
+      ImageURL = movie.ImageURL;
 
   var onBackClick = function onBackClick() {
     return props.onBackClick();
   };
-
-  var _useParams = (0, _reactRouterDom.useParams)(),
-      movieID = _useParams.movieID;
 
   return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Row, {
     className: "main-view justify-content-md-center"
@@ -51513,8 +51522,8 @@ function MovieView(props) {
       marginBottom: '0'
     }
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Img, {
-    src: movie.ImageURL
-  }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, movie.Title), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Release: ".concat(movie.Release)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Synopsis: ".concat(movie.Synopsis)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Directors: ", movie.Directors.map(function (director, index) {
+    src: ImageURL
+  }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, Title), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Release: ".concat(Release)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Synopsis: ".concat(Synopsis)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Directors: ", Directors.map(function (director, index) {
     return /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
       key: index,
       className: "movie-view-link",
@@ -51522,7 +51531,7 @@ function MovieView(props) {
     }, director.Name);
   }).reduce(function (prev, curr) {
     return [prev, ', ', curr];
-  })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Actors: ", movie.Actors.map(function (actor, index) {
+  })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Actors: ", Actors.map(function (actor, index) {
     return /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
       key: index,
       className: "link",
@@ -51530,7 +51539,7 @@ function MovieView(props) {
     }, actor.Name);
   }).reduce(function (prev, curr) {
     return [prev, ', ', curr];
-  }, '')), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Genres: ", movie.Genres.map(function (genre, index) {
+  }, '')), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Genres: ", Genres.map(function (genre, index) {
     return /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
       key: index,
       className: "movie-view-link",
@@ -51583,8 +51592,25 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (_i = _i.call(arr), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 function DirectorView(props) {
-  var director = props.director;
+  var _props$director = _slicedToArray(props.director, 1),
+      _props$director$ = _props$director[0],
+      Name = _props$director$.Name,
+      Birth = _props$director$.Birth,
+      Death = _props$director$.Death,
+      Bio = _props$director$.Bio;
 
   var onBackClick = function onBackClick() {
     return props.onBackClick();
@@ -51594,11 +51620,9 @@ function DirectorView(props) {
     window.scrollTo(0, 0);
   }), [];
 
-  var isDeath = function isDeath(director) {
-    director.map(function (director) {
-      if (!director.Death) return 'N/A';
-      director.Death;
-    });
+  var isDeath = function isDeath(death) {
+    if (!death) return 'N/A';
+    return death;
   };
 
   return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Row, {
@@ -51610,13 +51634,7 @@ function DirectorView(props) {
       height: 'auto',
       marginBottom: '0'
     }
-  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, director.map(function (dirctor) {
-    return dirctor.Name;
-  })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Birth: ", director.map(function (director) {
-    return director.Birth;
-  })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Death: ", isDeath(director)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, director.map(function (director) {
-    return director.Bio;
-  })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, console.log(Name), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, Name), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Birth: ", Birth), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Death: ", isDeath(Death)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, Bio), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
     onClick: onBackClick,
     variant: "link"
   }, "Back")))));
@@ -51653,13 +51671,23 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _reactBootstrap = require("react-bootstrap");
 
-var _reactRouterDom = require("react-router-dom");
-
 require("./genre-view.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (_i = _i.call(arr), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -51703,6 +51731,12 @@ var GenreView = /*#__PURE__*/function (_React$Component) {
       var _this$props = this.props,
           genre = _this$props.genre,
           onBackClick = _this$props.onBackClick;
+
+      var _genre = _slicedToArray(genre, 1),
+          _genre$ = _genre[0],
+          Name = _genre$.Name,
+          Description = _genre$.Description;
+
       return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Row, {
         className: "justify-content-md-center"
       }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
@@ -51712,11 +51746,7 @@ var GenreView = /*#__PURE__*/function (_React$Component) {
           height: 'auto',
           marginBottom: '0'
         }
-      }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, genre.map(function (genre) {
-        return genre.Name;
-      })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, genre.map(function (genre) {
-        return genre.Description;
-      })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
+      }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, Name), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, Description), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
         onClick: function onClick() {
           return onBackClick();
         },
@@ -51741,7 +51771,7 @@ GenreView.propTypes = {
   // }).isRequired,
   onBackClick: _propTypes.default.func
 };
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./genre-view.scss":"components/genre-view/genre-view.scss"}],"../node_modules/email-validator/index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","./genre-view.scss":"components/genre-view/genre-view.scss"}],"../node_modules/email-validator/index.js":[function(require,module,exports) {
 "use strict";
 
 var tester = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/; // Thanks to:

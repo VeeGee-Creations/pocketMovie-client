@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { Card, Row, Col, Button } from 'react-bootstrap';
-import {Link, useParams} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 import './movie-view.scss';
 
@@ -12,22 +12,21 @@ export default function MovieView(props) {
     }, []);
 
     const movie = props.movie;
+    const {Title, Release, Synopsis, Directors, Actors, Genres, ImageURL} = movie;
     const onBackClick = () => props.onBackClick();
-
-    const {movieID} = useParams();
 
     return(
         <Row className="main-view justify-content-md-center">
             <Col md={9}>
         <Card style={{height: 'auto', marginBottom: '0'}}>
-            <Card.Img src={movie.ImageURL}/>
+            <Card.Img src={ImageURL}/>
             <Card.Body>
-                <Card.Title>{movie.Title}</Card.Title>
-                <Card.Text>{`Release: ${movie.Release}`}</Card.Text>
-                <Card.Text>{`Synopsis: ${movie.Synopsis}`}</Card.Text>
-                <Card.Text>Directors: {movie.Directors.map((director, index) => (<Link key={index} className="movie-view-link" to={`/directors/${director.Name}`}>{director.Name}</Link>)).reduce((prev, curr) => [prev, ', ', curr])}</Card.Text>
-                <Card.Text>Actors: {movie.Actors.map((actor, index) => (<Link key={index} className="link" to={`/actors/${actor.Name}`}>{actor.Name}</Link>)).reduce((prev, curr) => [prev, ', ', curr], '')}</Card.Text>
-                <Card.Text>Genres: {(movie.Genres.map((genre, index) => (<Link key={index} className="movie-view-link" to={`/genres/${genre.Name}`}>{genre.Name}</Link>))).reduce((prev, curr) => [prev, ', ', curr])}</Card.Text>
+                <Card.Title>{Title}</Card.Title>
+                <Card.Text>{`Release: ${Release}`}</Card.Text>
+                <Card.Text>{`Synopsis: ${Synopsis}`}</Card.Text>
+                <Card.Text>Directors: {Directors.map((director, index) => (<Link key={index} className="movie-view-link" to={`/directors/${director.Name}`}>{director.Name}</Link>)).reduce((prev, curr) => [prev, ', ', curr])}</Card.Text>
+                <Card.Text>Actors: {Actors.map((actor, index) => (<Link key={index} className="link" to={`/actors/${actor.Name}`}>{actor.Name}</Link>)).reduce((prev, curr) => [prev, ', ', curr], '')}</Card.Text>
+                <Card.Text>Genres: {(Genres.map((genre, index) => (<Link key={index} className="movie-view-link" to={`/genres/${genre.Name}`}>{genre.Name}</Link>))).reduce((prev, curr) => [prev, ', ', curr])}</Card.Text>
                 <Button onClick={onBackClick} variant="link">Back</Button>
             </Card.Body>
         </Card>
