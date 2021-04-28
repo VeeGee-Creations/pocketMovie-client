@@ -1,10 +1,13 @@
 import React from 'react';
 import axios from 'axios';
 import {Row, Col, Spinner} from 'react-bootstrap';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 
 import LoginView from '../login-view/login-view';
 import MovieCard from '../movie-card/movie-card';
 import MovieView from '../movie-view/movie-view';
+import DirectorView from '../director-view/director-view';
+import GenreView from '../genre-view/genre-view';
 import RegisterView from '../register-view/register-view';
 import Header from '../header/header';
 
@@ -18,7 +21,6 @@ export default class MainView extends React.Component {
             selectedMovie: null,
             user: null,
             registered: true,
-            scrollPosition: 0,
         };
     }
 
@@ -45,6 +47,7 @@ export default class MainView extends React.Component {
     }
     
     onSearch(searchParams, token) {
+        this.setState({movies: null});
         axios.get(`https://pocket-movies.herokuapp.com/movies/${searchParams}`, {
             headers: {Authorization: `Bearer ${token}`}
         })
@@ -54,12 +57,6 @@ export default class MainView extends React.Component {
             });
         })
         .catch(err => console.error(err));
-    }
-
-    onMovieClick(movie) {
-        this.setState({
-            selectedMovie: movie
-        });
     }
 
     onLoggedIn(authData) {
@@ -86,12 +83,8 @@ export default class MainView extends React.Component {
         });
     }
 
-    setScrollPosition(position) {
-        this.setState({scrollPosition: position});
-    }
-
     render() {
-        const {movies, selectedMovie, user, registered, scrollPosition} = this.state;
+        const {movies, user, registered} = this.state;
 
         if(!registered) return <RegisterView onRegister={register => this.onRegister(register)}/>;
 
@@ -100,23 +93,33 @@ export default class MainView extends React.Component {
         if(!movies) return <Spinner animation="border" role="status"/>;
         
         return(
-            <div>
+            <Router>
                 <Header onLogout={setNull => this.onLogout(setNull)} onSearch={(searchParams, accessToken) => this.onSearch(searchParams, accessToken)}/>
                 <Row className="main-view justify-content-md-center">
-                    {selectedMovie 
-                        ? (
-                            <Col md={8}>
-                                <MovieView movie={selectedMovie} scrollPosition={scrollPosition} onBackClick={newSelectedMovie => this.onMovieClick(newSelectedMovie)}/>
-                            </Col>
-                        )
-                        : movies.map((movie, index) => (
+                    <Route exact path="/" render={() => {
+                        return movies.map((movie, index) => (
                             <Col md={3} sm={6} key={index}>
-                                <MovieCard key={movie._id} movie={movie} onClick={movie => {this.setScrollPosition(window.pageYOffset); this.onMovieClick(movie)}}/>
+                                <MovieCard key={movie._id} movie={movie}/>
                             </Col>
                         ))
-                    }
+                    }}/>
+                    <Route path="/movies/:movieID" render={({match, history}) => {
+                        return <Col md={8}>
+                        <MovieView movie={movies.find(movie => movie._id === match.params.movieID)} onBackClick={() => history.goBack()}/>
+                    </Col>
+                    }}/>
+                    <Route path="/directors/:name" render={({match, history}) => {
+                        return <Col md={8}>
+                            <DirectorView director={movies.find(movie => movie.Directors.find(director => director.Name === match.params.name)).Directors} onBackClick={() => history.goBack()}/>
+                        </Col>
+                    }}/>
+                    <Route path="/genres/:name" render={({match, history}) =>{
+                        return <Col md={8}>
+                            <GenreView genre={movies.find(movie => movie.Genres.find(genres => genres.Name === match.params.name)).Genres} onBackClick={() => history.goBack()}/>
+                        </Col>
+                    }}/>
                 </Row>
-            </div>
+            </Router>
         );
     }
 }

@@ -1,0 +1,17 @@
+.pop:hover{
+    transform: scale(1.03);
+    transition: transform 0.15s;
+}
+
+.pop {
+    transition: transform 0.15s;
+}
+
+.link {
+    color: inherit;
+}
+
+.link:hover {
+    text-decoration: none;
+    color: inherit;
+}

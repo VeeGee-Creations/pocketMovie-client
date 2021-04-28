@@ -8,6 +8,31 @@
     max-width: 320px;
   }
 }
+.pop:hover {
+  transform: scale(1.03);
+  transition: transform 0.15s;
+}
+
+.pop {
+  transition: transform 0.15s;
+}
+
+.link {
+  color: inherit;
+}
+
+.link:hover {
+  text-decoration: none;
+  color: inherit;
+}
+.movie-view-link {
+  color: #007053;
+}
+
+.movie-view-link:hover {
+  text-decoration: underline;
+  color: #007053;
+}
 div.card {
   height: 625px;
   margin-bottom: 15px;

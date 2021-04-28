@@ -1,42 +1,39 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { Card, Row, Col, Button } from 'react-bootstrap';
+import {Link, useParams} from 'react-router-dom';
 
 import './movie-view.scss';
 
-export default class MovieView extends React.Component {
+export default function MovieView(props) {
 
-    componentDidMount() {
-        window.scrollTo(0, 0)
-    }
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
-    returnToMovie(position) {
-        setTimeout(() => window.scrollTo({left: 0, top: parseInt(position), behavior: 'smooth'})), 2;
-    }
+    const movie = props.movie;
+    const onBackClick = () => props.onBackClick();
 
-    render() {
-        const {movie, onBackClick, scrollPosition} = this.props;
+    const {movieID} = useParams();
 
-        return(
-            <Row className="main-view justify-content-md-center">
-                <Col md={9}>
-            <Card style={{height: 'auto', marginBottom: '0'}}>
-                <Card.Img src={movie.ImageURL}/>
-                <Card.Body>
-                    <Card.Title>{movie.Title}</Card.Title>
-                    <Card.Text>{`Release: ${movie.Release}`}</Card.Text>
-                    <Card.Text>{`Synopsis: ${movie.Synopsis}`}</Card.Text>
-                    <Card.Text>{`Directors: ${movie.Directors.map((director) => director.Name).join(', ')}`}</Card.Text>
-                    <Card.Text>{`Actors: ${movie.Actors.map((actor) => actor.Name).join(', ')}`}</Card.Text>
-                    <Card.Text>{`Genres: ${movie.Genres.map((genre) => genre.Name).join(', ')}`}</Card.Text>
-
-                    <Button onClick={() => {onBackClick(null); this.returnToMovie(scrollPosition)}} variant="link">Back</Button>
-                </Card.Body>
-            </Card>
-            </Col>
-            </Row>
-        );
-    }
+    return(
+        <Row className="main-view justify-content-md-center">
+            <Col md={9}>
+        <Card style={{height: 'auto', marginBottom: '0'}}>
+            <Card.Img src={movie.ImageURL}/>
+            <Card.Body>
+                <Card.Title>{movie.Title}</Card.Title>
+                <Card.Text>{`Release: ${movie.Release}`}</Card.Text>
+                <Card.Text>{`Synopsis: ${movie.Synopsis}`}</Card.Text>
+                <Card.Text>Directors: {movie.Directors.map((director, index) => (<Link key={index} className="movie-view-link" to={`/directors/${director.Name}`}>{director.Name}</Link>)).reduce((prev, curr) => [prev, ', ', curr])}</Card.Text>
+                <Card.Text>Actors: {movie.Actors.map((actor, index) => (<Link key={index} className="link" to={`/actors/${actor.Name}`}>{actor.Name}</Link>)).reduce((prev, curr) => [prev, ', ', curr], '')}</Card.Text>
+                <Card.Text>Genres: {(movie.Genres.map((genre, index) => (<Link key={index} className="movie-view-link" to={`/genres/${genre.Name}`}>{genre.Name}</Link>))).reduce((prev, curr) => [prev, ', ', curr])}</Card.Text>
+                <Button onClick={onBackClick} variant="link">Back</Button>
+            </Card.Body>
+        </Card>
+        </Col>
+        </Row>
+    );
 }
 
 MovieView.propTypes = {
@@ -49,5 +46,5 @@ MovieView.propTypes = {
         Actors: PropTypes.array,
         Genres: PropTypes.array,
     }).isRequired,
-    onBackClick: PropTypes.func.isRequired
+    onBackClick: PropTypes.func,
 }
