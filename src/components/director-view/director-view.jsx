@@ -23,7 +23,6 @@ export default function DirectorView(props) {
             <Col md={9}>
         <Card style={{height: 'auto', marginBottom: '0'}}>
             <Card.Body>
-                {console.log(Name)}
                 <Card.Title>{Name}</Card.Title>
                 <Card.Text>Birth: {Birth}</Card.Text>
                 <Card.Text>Death: {isDeath(Death)}</Card.Text>

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Button, Form} from 'react-bootstrap';
 import axios from 'axios';
+import {Link} from 'react-router-dom';
 
 import './login-view.scss';
 
@@ -22,8 +23,6 @@ export default function LoginView(props) {
         .catch(e => console.error('no such user'));
     };
 
-    const handleRegister = () => props.onRegister(false);
-
     const validateForm = () => username.length > 0 && password.length > 0;
 
     return (
@@ -39,7 +38,9 @@ export default function LoginView(props) {
                     <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)}/>
                 </Form.Group>
                 <Button block size="lg" type="submit" disabled={!validateForm()}>Login</Button>
-                <Button block size="lg" variant="link" onClick= {handleRegister}>Register</Button>
+                <Link to="/register">
+                <Button block size="lg" variant="link">Register</Button>
+                </Link>
             </Form>
         </div>
     );
@@ -50,6 +51,5 @@ LoginView.propTypes = {
         username: PropTypes.string.isRequired,
         password: PropTypes.string.isRequired
     }),
-    onLoggedIn: PropTypes.func.isRequired,
-    onRegister: PropTypes.func.isRequired
+    onLoggedIn: PropTypes.func.isRequired
 };

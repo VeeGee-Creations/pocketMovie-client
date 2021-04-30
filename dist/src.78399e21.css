@@ -68,6 +68,10 @@ body {
   margin-top: 110px;
 }
 
+.no-header {
+  margin-top: 0;
+}
+
 .my-flix {
   color: steelblue;
 }

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import {Link} from 'react-router-dom';
@@ -6,10 +6,6 @@ import {Link} from 'react-router-dom';
 import './movie-view.scss';
 
 export default function MovieView(props) {
-
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
 
     const movie = props.movie;
     const {Title, Release, Synopsis, Directors, Actors, Genres, ImageURL} = movie;

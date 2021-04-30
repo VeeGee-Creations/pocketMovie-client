@@ -1,18 +1,33 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import emailPropType from 'email-prop-type';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import {Form, Button} from 'react-bootstrap';
+import axios from 'axios';
+
 
 export default function RegisterView(props) {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [birthday, setBirthday] = useState('');
+    const {onBackClick} = props;
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        props.onRegister(true);
+        axios.post('https://pocket-movies.herokuapp.com/users', {
+            Username: username,
+            Password: password,
+            Email: email,
+            Birthday: birthday
+        })
+        .then(res => {
+            const data = res.data;
+            window.open('/', '_self');
+        })
+        .catch(e => {
+            console.error('error registering the user')
+        });
     };
 
     const validateForm = () => username.length > 0 && email.length > 0 && password.length > 0 && birthday.length > 0;
@@ -38,7 +53,7 @@ export default function RegisterView(props) {
                     <Form.Control type="date" value={birthday} onChange={e => setBirthday(e.target.value)}/>
                 </Form.Group>
                 <Button block size="lg" type="submit" disabled={!validateForm()}>Register</Button>
-                <Button block size="lg" variant="link" onClick={() => props.onRegister(true)}>Login</Button>
+                <Button block size="lg" variant="link" onClick={onBackClick}>Login</Button>
             </Form>
         </div>
     );
@@ -50,6 +65,5 @@ RegisterView.propTypes = {
         email: emailPropType.isRequired,
         password: PropTypes.string.isRequired,
         birthday: PropTypes.instanceOf(Date).isRequired
-    }),
-    onRegister: PropTypes.func.isRequired
+    })
 };
