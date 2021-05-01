@@ -95,6 +95,7 @@ export default class MainView extends React.Component {
             headers: {Authorization: `Bearer ${token}`}
         })
         .then(res => {
+            console.log(res.data);
             const profileData = {
                 Username: res.data.Username,
                 Email: res.data.Email,
@@ -165,6 +166,16 @@ export default class MainView extends React.Component {
                         return <Col md={12}>
                             <UpdateView profile={profile} onBackClick={() => history.goBack()}/>
                         </Col>
+                    }}/>
+                    <Route exact path="/favorites" render={() => {
+                        if(!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
+                        if(!favorites) return <Spinner animation="border" role="status"/>;
+                        {console.log(favorites)}
+                        return favorites.map((movie, index) => (
+                            <Col md={3} sm={6} key={index}>
+                                <MovieCard key={movie._id} movie={favorites}/>
+                            </Col>
+                        ))
                     }}/>
                 </Row>
             </Router>

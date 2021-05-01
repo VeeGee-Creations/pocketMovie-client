@@ -51978,7 +51978,13 @@ function Header(props) {
     block: true,
     size: "lg",
     variant: "link"
-  }, user)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
+  }, user)), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+    to: "/favorites"
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
+    block: true,
+    size: "lg",
+    variant: "link"
+  }, "Favorites")), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
     block: true,
     size: "md",
     onClick: handleLogout
@@ -52385,6 +52391,7 @@ var MainView = /*#__PURE__*/function (_React$Component) {
           Authorization: "Bearer ".concat(token)
         }
       }).then(function (res) {
+        console.log(res.data);
         var profileData = {
           Username: res.data.Username,
           Email: res.data.Email,
@@ -52588,6 +52595,33 @@ var MainView = /*#__PURE__*/function (_React$Component) {
             }
           }));
         }
+      }), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
+        exact: true,
+        path: "/favorites",
+        render: function render() {
+          if (!user) return /*#__PURE__*/_react.default.createElement(_loginView.default, {
+            onLoggedIn: function onLoggedIn(user) {
+              return _this5.onLoggedIn(user);
+            }
+          });
+          if (!favorites) return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Spinner, {
+            animation: "border",
+            role: "status"
+          });
+          {
+            console.log(favorites);
+          }
+          return favorites.map(function (movie, index) {
+            return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
+              md: 3,
+              sm: 6,
+              key: index
+            }, /*#__PURE__*/_react.default.createElement(_movieCard.default, {
+              key: movie._id,
+              movie: favorites
+            }));
+          });
+        }
       })));
     }
   }]);
@@ -52700,7 +52734,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53664" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61947" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

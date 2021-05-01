@@ -32,6 +32,9 @@ export default function Header(props) {
                     <Link to="/profile">
                         <Button block size="lg" variant="link">{user}</Button>
                     </Link>
+                    <Link to="/favorites">
+                        <Button block size="lg" variant="link">Favorites</Button>
+                    </Link>
                     <Button block size="md" onClick= {handleLogout}>Logout</Button>
                 </Nav>
             </Navbar.Collapse>
