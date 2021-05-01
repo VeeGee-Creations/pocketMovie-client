@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Form} from 'react-bootstrap';
+import {Button, Card, Form} from 'react-bootstrap';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
 
@@ -28,20 +28,24 @@ export default function LoginView(props) {
     return (
         <div className="Login">
             <h1>Pocket Movies</h1>
-            <Form onSubmit={handleSubmit}>
-                <Form.Group size="lg" controlId="username">
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control autoFocus type="text" value={username} onChange={e => setUsername(e.target.value)}/>
-                </Form.Group>
-                <Form.Group size="lg" controlId="password">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)}/>
-                </Form.Group>
-                <Button block size="lg" type="submit" disabled={!validateForm()}>Login</Button>
-                <Link to="/register">
-                <Button block size="lg" variant="link">Register</Button>
-                </Link>
-            </Form>
+            <Card>
+                <Card.Body>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group size="lg" controlId="username">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control autoFocus type="text" value={username} onChange={e => setUsername(e.target.value)}/>
+                        </Form.Group>
+                        <Form.Group size="lg" controlId="password">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)}/>
+                        </Form.Group>
+                        <Button block size="lg" type="submit" disabled={!validateForm()}>Login</Button>
+                        <Link to="/register">
+                        <Button block size="lg" variant="link">Register</Button>
+                        </Link>
+                    </Form>
+                </Card.Body>
+            </Card>
         </div>
     );
 }

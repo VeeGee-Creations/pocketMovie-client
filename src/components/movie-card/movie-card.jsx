@@ -12,7 +12,7 @@ export default class MovieCard extends React.Component {
         const {_id: ID, ImageURL, Title, Synopsis, Release} = movie;
         return (
             <Link className="link" to={`/movies/${ID}`}>
-            <Card className="pop">
+            <Card className="movie-card pop">
                 <Card.Img variant="top" src={ImageURL}/>
                 <Card.Body>
                     <Card.Title>{Title}</Card.Title>

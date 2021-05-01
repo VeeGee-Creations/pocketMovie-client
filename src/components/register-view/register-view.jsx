@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import emailPropType from 'email-prop-type';
-import {Form, Button} from 'react-bootstrap';
+import {Form, Button, Card} from 'react-bootstrap';
 import axios from 'axios';
 
 
@@ -22,7 +22,6 @@ export default function RegisterView(props) {
             Birthday: birthday
         })
         .then(res => {
-            const data = res.data;
             window.open('/', '_self');
         })
         .catch(e => {
@@ -35,26 +34,30 @@ export default function RegisterView(props) {
     return (
         <div className="Register">
             <h1>Pocket Movies</h1>
-            <Form onSubmit={handleSubmit}>
-                <Form.Group size="lg" controlId="username">
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control autoFocus type="text" value={username} onChange={e => setUsername(e.target.value)}/>
-                </Form.Group>
-                <Form.Group size="lg" controlId="email">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control autoFocus type="email" value={email} onChange={e => setEmail(e.target.value)}/>
-                </Form.Group>
-                <Form.Group size="lg" controlId="password">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)}/>
-                </Form.Group>
-                <Form.Group size="lg" controlId="birthday">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control type="date" value={birthday} onChange={e => setBirthday(e.target.value)}/>
-                </Form.Group>
-                <Button block size="lg" type="submit" disabled={!validateForm()}>Register</Button>
-                <Button block size="lg" variant="link" onClick={onBackClick}>Login</Button>
-            </Form>
+            <Card>
+                <Card.Body>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group size="lg" controlId="username">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control autoFocus type="text" value={username} onChange={e => setUsername(e.target.value)}/>
+                        </Form.Group>
+                        <Form.Group size="lg" controlId="email">
+                            <Form.Label>Email</Form.Label>
+                            <Form.Control autoFocus type="email" value={email} onChange={e => setEmail(e.target.value)}/>
+                        </Form.Group>
+                        <Form.Group size="lg" controlId="password">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)}/>
+                        </Form.Group>
+                        <Form.Group size="lg" controlId="birthday">
+                            <Form.Label>Birthday</Form.Label>
+                            <Form.Control type="date" value={birthday} onChange={e => setBirthday(e.target.value)}/>
+                        </Form.Group>
+                        <Button block size="lg" type="submit" disabled={!validateForm()}>Register</Button>
+                        <Button block size="lg" variant="link" onClick={onBackClick}>Login</Button>
+                    </Form>
+                </Card.Body>
+            </Card>
         </div>
     );
 }

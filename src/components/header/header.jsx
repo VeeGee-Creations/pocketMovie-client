@@ -8,7 +8,7 @@ export default function Header(props) {
     const [searchParam, setSearchParam] = useState('');
     const {onLogout, onSearch, user} = props;
 
-    const handleLogout = () => onLogout(false);
+    const handleLogout = () => onLogout(null);
 
     const handleSearch= (e) =>{
         e.preventDefault();
@@ -29,15 +29,9 @@ export default function Header(props) {
                     <Button type="submit" variant="outline-success" onClick={handleSearch}>Search</Button>
                 </Form>
                 <Nav className="ml-auto">
-                    {/* <Nav.Link href="#">Featured</Nav.Link>
-                    <Nav.Link href="#">Directors</Nav.Link>
-                    <Nav.Link href="#">Genres</Nav.Link> */}
                     <Link to="/profile">
                         <Button block size="lg" variant="link">{user}</Button>
                     </Link>
-                    {/* <Link to="/profile">
-                        <Button block size="lg" variant="link">{user}</Button>
-                    </Link> */}
                     <Button block size="md" onClick= {handleLogout}>Logout</Button>
                 </Nav>
             </Navbar.Collapse>

@@ -11,6 +11,7 @@ import GenreView from '../genre-view/genre-view';
 import RegisterView from '../register-view/register-view';
 import Header from '../header/header';
 import ProfileView from '../profile-view/profile-view';
+import UpdateView from '../update-view/update-view';
 
 import './main-view.scss';
 
@@ -20,16 +21,20 @@ export default class MainView extends React.Component {
         this.state = {
             movies: null,
             user: null,
+            profile: null,
+            favorites: null,
         };
     }
 
     componentDidMount() {
         const accessToken = localStorage.getItem('token');
-        if(accessToken !== null) {
+        if(accessToken) {
             this.setState({
                 user: localStorage.getItem('user')
             });
-            this.getMovies(accessToken);
+
+            if(!this.movies) this.getMovies(accessToken);
+            if(!this.profile) this.getProfile(accessToken);
         }
     }
 
@@ -59,8 +64,17 @@ export default class MainView extends React.Component {
     }
 
     onLoggedIn(authData) {
+        const profileData = {
+            Username: authData.user.Username,
+            Email: authData.user.Email,
+            Birthday: authData.user.Birthday
+        };
+        const favoritesData = authData.user.Favorites;
+
         this.setState({
-            user: authData.user.Username
+            user: authData.user.Username,
+            profile: profileData,
+            favorites: favoritesData
         });
 
         localStorage.setItem('token', authData.token);
@@ -72,12 +86,32 @@ export default class MainView extends React.Component {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         this.setState({
-            user: setNull
+            user: setNull,
         });
     }
 
+    getProfile(token){
+        axios.get('https://pocket-movies.herokuapp.com/users/profile', {
+            headers: {Authorization: `Bearer ${token}`}
+        })
+        .then(res => {
+            const profileData = {
+                Username: res.data.Username,
+                Email: res.data.Email,
+                Birthday: res.data.Birthday
+            };
+            const favoritesData = res.data.Favorites;
+            
+            this.setState({
+                profile: profileData,
+                favorites: favoritesData
+            });
+        })
+        .catch(err => console.error(err));
+    }
+
     render() {  
-        const {user, movies} = this.state; 
+        const {user, movies, profile, favorites} = this.state; 
         if(!user) document.body.classList.add('no-header');
         if(user) document.body.classList.remove('no-header');
         return(
@@ -118,11 +152,18 @@ export default class MainView extends React.Component {
                             <GenreView genre={movies.find(movie => movie.Genres.find(genre => genre.Name === match.params.name)).Genres} match={match.params.name} onBackClick={() => history.goBack()}/>
                         </Col>
                     }}/>
-                    <Route path="/profile" render={({history}) =>{
+                    <Route exact path="/profile" render={({history}) =>{
                         if(!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
-                        if(!movies) return <Spinner animation="border" role="status"/>;
-                        return <Col md={8}>
-                            <ProfileView onBackClick={() => history.goBack()}/>
+                        if(!profile) return <Spinner animation="border" role="status"/>;
+                        return <Col md={12}>
+                            <ProfileView profile={profile} onLogout={setNull => this.onLogout(setNull)} onBackClick={() => history.goBack()}/>
+                        </Col>
+                    }}/>
+                    <Route exact path="/profile/update" render={({history}) =>{
+                        if(!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
+                        if(!profile) return <Spinner animation="border" role="status"/>;
+                        return <Col md={12}>
+                            <UpdateView profile={profile} onBackClick={() => history.goBack()}/>
                         </Col>
                     }}/>
                 </Row>
