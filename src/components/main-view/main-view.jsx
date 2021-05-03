@@ -32,9 +32,9 @@ export default class MainView extends React.Component {
             this.setState({
                 user: localStorage.getItem('user')
             });
+            if(!this.movies) this.getMovies(accessToken);
+            if(!this.profile || !this.favorites) this.getProfile(accessToken);
         }
-        if(!this.movies) this.getMovies(accessToken);
-        if(!this.profile || !this.favorites) this.getProfile(accessToken);
     }
 
     getMovies(token) {
@@ -183,7 +183,7 @@ export default class MainView extends React.Component {
                         if(!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
                         if(!favorites) return <Spinner animation="border" role="status"/>;
                         return favorites.map((movie, index) => (
-                            <Col md={3} sm={6} key={index}>
+                            <Col md={3} sm={6} lg={3} key={index}>
                                 <MovieCard key={movie._id} movie={movie} favorites={favorites} addFavorite={movieID => this.addFavorite(movieID)} removeFavorite={movieID => this.removeFavorite(movieID)}/>
                             </Col>
                         ))

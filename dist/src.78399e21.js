@@ -52384,10 +52384,9 @@ var MainView = /*#__PURE__*/function (_React$Component) {
         this.setState({
           user: localStorage.getItem('user')
         });
+        if (!this.movies) this.getMovies(accessToken);
+        if (!this.profile || !this.favorites) this.getProfile(accessToken);
       }
-
-      if (!this.movies) this.getMovies(accessToken);
-      if (!this.profile || !this.favorites) this.getProfile(accessToken);
     }
   }, {
     key: "getMovies",
@@ -52718,6 +52717,7 @@ var MainView = /*#__PURE__*/function (_React$Component) {
             return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
               md: 3,
               sm: 6,
+              lg: 3,
               key: index
             }, /*#__PURE__*/_react.default.createElement(_movieCard.default, {
               key: movie._id,
