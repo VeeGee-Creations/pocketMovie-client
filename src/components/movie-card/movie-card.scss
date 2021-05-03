@@ -6,6 +6,13 @@
         transform: scale(1.03);
         transition: transform 0.15s;
     }
+
+    &:focus-within .overlay{
+        opacity: 1;
+    }
+    &:hover .overlay{
+        opacity: 1;
+    }
 }
 
 .link {
@@ -27,13 +34,9 @@
     padding: 20px;
     text-align: center;
     cursor: pointer;
-
-    &:focus{
-        opacity: 1;
-    }
 }
 
-.pop:hover .overlay,
-.pop:focus .overlay{
-    opacity: 1;
-}
+// .pop:hover .overlay,
+// .pop:focus .overlay{
+//     opacity: 1;
+// }

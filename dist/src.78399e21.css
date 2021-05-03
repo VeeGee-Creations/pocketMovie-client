@@ -16,6 +16,12 @@
   transform: scale(1.03);
   transition: transform 0.15s;
 }
+.pop:focus-within .overlay {
+  opacity: 1;
+}
+.pop:hover .overlay {
+  opacity: 1;
+}
 
 .link {
   color: inherit;
@@ -35,14 +41,6 @@
   padding: 20px;
   text-align: center;
   cursor: pointer;
-}
-.overlay:focus {
-  opacity: 1;
-}
-
-.pop:hover .overlay,
-.pop:focus .overlay {
-  opacity: 1;
 }
 .movie-view-link {
   color: #007053;

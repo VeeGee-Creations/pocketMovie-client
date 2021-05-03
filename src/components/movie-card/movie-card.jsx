@@ -33,7 +33,7 @@ export default class MovieCard extends React.Component {
                             <Card.Text style={{marginTop: '20px'}}>{`Release: ${Release}`}</Card.Text>
                         </Card.Body>
                 </Link>
-                <div tabIndex="0" className="overlay d-flex align-items-center justify-content-center" onClick={() => this.handleFavorite()}>
+                <div tabIndex="0" className="overlay d-flex align-items-center justify-content-center z-index-master" onClick={() => this.handleFavorite()}>
                     <AddFavorites movie={movie} favorites={favorites}/>
                 </div>
             </Card>

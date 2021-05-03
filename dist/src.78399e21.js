@@ -51514,7 +51514,7 @@ var MovieCard = /*#__PURE__*/function (_React$Component) {
         }
       }, "Release: ".concat(Release)))), /*#__PURE__*/_react.default.createElement("div", {
         tabIndex: "0",
-        className: "overlay d-flex align-items-center justify-content-center",
+        className: "overlay d-flex align-items-center justify-content-center z-index-master",
         onClick: function onClick() {
           return _this2.handleFavorite();
         }
