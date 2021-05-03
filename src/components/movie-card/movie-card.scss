@@ -27,8 +27,13 @@
     padding: 20px;
     text-align: center;
     cursor: pointer;
+
+    &:focus{
+        opacity: 1;
+    }
 }
 
-.pop:hover .overlay{
+.pop:hover .overlay,
+.pop:focus .overlay{
     opacity: 1;
 }

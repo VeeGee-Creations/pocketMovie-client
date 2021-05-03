@@ -36,8 +36,12 @@
   text-align: center;
   cursor: pointer;
 }
+.overlay:focus {
+  opacity: 1;
+}
 
-.pop:hover .overlay {
+.pop:hover .overlay,
+.pop:focus .overlay {
   opacity: 1;
 }
 .movie-view-link {
