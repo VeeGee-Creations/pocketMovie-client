@@ -12,6 +12,7 @@ import RegisterView from '../register-view/register-view';
 import Header from '../header/header';
 import ProfileView from '../profile-view/profile-view';
 import UpdateView from '../update-view/update-view';
+import AddFavorites from '../add-favorites/add-favorites';
 
 import './main-view.scss';
 
@@ -32,10 +33,9 @@ export default class MainView extends React.Component {
             this.setState({
                 user: localStorage.getItem('user')
             });
-
-            if(!this.movies) this.getMovies(accessToken);
-            if(!this.profile) this.getProfile(accessToken);
         }
+        if(!this.movies) this.getMovies(accessToken);
+        if(!this.profile || !this.favorites) this.getProfile(accessToken);
     }
 
     getMovies(token) {
@@ -64,22 +64,14 @@ export default class MainView extends React.Component {
     }
 
     onLoggedIn(authData) {
-        const profileData = {
-            Username: authData.user.Username,
-            Email: authData.user.Email,
-            Birthday: authData.user.Birthday
-        };
-        const favoritesData = authData.user.Favorites;
-
         this.setState({
             user: authData.user.Username,
-            profile: profileData,
-            favorites: favoritesData
         });
 
         localStorage.setItem('token', authData.token);
         localStorage.setItem('user', authData.user.Username);
-            this.getMovies(authData.token);
+        this.getMovies(authData.token);
+        this.getProfile(authData.token);
     }
 
     onLogout(setNull) {
@@ -95,7 +87,6 @@ export default class MainView extends React.Component {
             headers: {Authorization: `Bearer ${token}`}
         })
         .then(res => {
-            console.log(res.data);
             const profileData = {
                 Username: res.data.Username,
                 Email: res.data.Email,
@@ -111,6 +102,28 @@ export default class MainView extends React.Component {
         .catch(err => console.error(err));
     }
 
+    addFavorite(id) {
+        const token = localStorage.getItem('token');
+        axios.post(`https://pocket-movies.herokuapp.com/users/favorites/push/${id}`,{}, {
+            headers: {Authorization: `Bearer ${token}`}
+        })
+        .then(res => {
+            this.getProfile(token);
+        })
+        .catch(err => console.error(err));
+    }
+
+    removeFavorite(id) {
+        const token = localStorage.getItem('token');
+        axios.post(`https://pocket-movies.herokuapp.com/users/favorites/pull/${id}`,{}, {
+            headers: {Authorization: `Bearer ${token}`}
+        })
+        .then(res => {
+            this.getProfile(token);
+        })
+        .catch(err => console.error(err));
+    }
+    
     render() {  
         const {user, movies, profile, favorites} = this.state; 
         if(!user) document.body.classList.add('no-header');
@@ -124,7 +137,7 @@ export default class MainView extends React.Component {
                         if(!movies) return <Spinner animation="border" role="status"/>;
                         return movies.map((movie, index) => (
                             <Col md={3} sm={6} key={index}>
-                                <MovieCard key={movie._id} movie={movie}/>
+                                <MovieCard key={movie._id} movie={movie} favorites={favorites} AddFavorites={AddFavorites} addFavorite={movieID => this.addFavorite(movieID)} removeFavorite={movieID => this.removeFavorite(movieID)}/>
                             </Col>
                         ))
                     }}/>
@@ -170,10 +183,9 @@ export default class MainView extends React.Component {
                     <Route exact path="/favorites" render={() => {
                         if(!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
                         if(!favorites) return <Spinner animation="border" role="status"/>;
-                        {console.log(favorites)}
                         return favorites.map((movie, index) => (
                             <Col md={3} sm={6} key={index}>
-                                <MovieCard key={movie._id} movie={favorites}/>
+                                <MovieCard key={movie._id} movie={movie} favorites={favorites} AddFavorites={AddFavorites}  addFavorite={movieID => this.addFavorite(movieID)} removeFavorite={movieID => this.removeFavorite(movieID)}/>
                             </Col>
                         ))
                     }}/>

@@ -51427,19 +51427,65 @@ var MovieCard = /*#__PURE__*/function (_React$Component) {
   }
 
   _createClass(MovieCard, [{
+    key: "isFavorite",
+    value: function isFavorite() {
+      var _this = this;
+
+      var favMovie = this.props.favorites && this.props.favorites.find(function (fav) {
+        return fav._id === _this.props.movie._id;
+      });
+      if (favMovie) return /*#__PURE__*/_react.default.createElement("svg", {
+        xmlns: "http://www.w3.org/2000/svg",
+        width: "16",
+        height: "16",
+        fill: "red",
+        className: "bi bi-heart-fill",
+        viewBox: "0 0 16 16"
+      }, /*#__PURE__*/_react.default.createElement("path", {
+        fillRule: "evenodd",
+        d: "M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+      }));
+      return /*#__PURE__*/_react.default.createElement("svg", {
+        xmlns: "http://www.w3.org/2000/svg",
+        width: "16",
+        height: "16",
+        fill: "currentColor",
+        className: "bi bi-heart",
+        viewBox: "0 0 16 16"
+      }, /*#__PURE__*/_react.default.createElement("path", {
+        d: "m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"
+      }));
+    }
+  }, {
+    key: "handleFavorite",
+    value: function handleFavorite() {
+      var _this2 = this;
+
+      // console.log('click')
+      var favMovie = this.props.favorites && this.props.favorites.find(function (fav) {
+        return fav._id === _this2.props.movie._id;
+      });
+      if (favMovie) return this.props.removeFavorite(this.props.movie._id);
+      return this.props.addFavorite(this.props.movie._id);
+    }
+  }, {
     key: "render",
     value: function render() {
-      var movie = this.props.movie;
+      var _this3 = this;
+
+      var _this$props = this.props,
+          movie = _this$props.movie,
+          AddFavorites = _this$props.AddFavorites;
       var ID = movie._id,
           ImageURL = movie.ImageURL,
           Title = movie.Title,
           Synopsis = movie.Synopsis,
           Release = movie.Release;
-      return /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+      return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
+        className: "movie-card pop"
+      }, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         className: "link",
         to: "/movies/".concat(ID)
-      }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
-        className: "movie-card pop"
       }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Img, {
         variant: "top",
         src: ImageURL
@@ -51449,7 +51495,14 @@ var MovieCard = /*#__PURE__*/function (_React$Component) {
         style: {
           marginTop: '20px'
         }
-      }, "Release: ".concat(Release)))));
+      }, "Release: ".concat(Release)))), /*#__PURE__*/_react.default.createElement("div", {
+        className: "overlay d-flex align-items-center justify-content-center",
+        onClick: function onClick() {
+          return _this3.handleFavorite();
+        }
+      }, /*#__PURE__*/_react.default.createElement(AddFavorites, {
+        isFavorite: this.isFavorite()
+      })));
     }
   }]);
 
@@ -52218,7 +52271,28 @@ function UpdateView(props) {
     onClick: onBackClick
   }, "Cancel"))))))));
 }
-},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","axios":"../node_modules/axios/index.js"}],"components/main-view/main-view.scss":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","axios":"../node_modules/axios/index.js"}],"components/add-favorites/add-favorites.jsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AddFavorites = function AddFavorites(props) {
+  var isFavorite = props.isFavorite;
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("span", {
+    className: "mr-2"
+  }, "Add to Favorites"), isFavorite);
+};
+
+var _default = AddFavorites;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js"}],"components/main-view/main-view.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -52256,6 +52330,8 @@ var _header = _interopRequireDefault(require("../header/header"));
 var _profileView = _interopRequireDefault(require("../profile-view/profile-view"));
 
 var _updateView = _interopRequireDefault(require("../update-view/update-view"));
+
+var _addFavorites = _interopRequireDefault(require("../add-favorites/add-favorites"));
 
 require("./main-view.scss");
 
@@ -52312,9 +52388,10 @@ var MainView = /*#__PURE__*/function (_React$Component) {
         this.setState({
           user: localStorage.getItem('user')
         });
-        if (!this.movies) this.getMovies(accessToken);
-        if (!this.profile) this.getProfile(accessToken);
       }
+
+      if (!this.movies) this.getMovies(accessToken);
+      if (!this.profile || !this.favorites) this.getProfile(accessToken);
     }
   }, {
     key: "getMovies",
@@ -52357,20 +52434,13 @@ var MainView = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "onLoggedIn",
     value: function onLoggedIn(authData) {
-      var profileData = {
-        Username: authData.user.Username,
-        Email: authData.user.Email,
-        Birthday: authData.user.Birthday
-      };
-      var favoritesData = authData.user.Favorites;
       this.setState({
-        user: authData.user.Username,
-        profile: profileData,
-        favorites: favoritesData
+        user: authData.user.Username
       });
       localStorage.setItem('token', authData.token);
       localStorage.setItem('user', authData.user.Username);
       this.getMovies(authData.token);
+      this.getProfile(authData.token);
     }
   }, {
     key: "onLogout",
@@ -52391,7 +52461,6 @@ var MainView = /*#__PURE__*/function (_React$Component) {
           Authorization: "Bearer ".concat(token)
         }
       }).then(function (res) {
-        console.log(res.data);
         var profileData = {
           Username: res.data.Username,
           Email: res.data.Email,
@@ -52408,9 +52477,43 @@ var MainView = /*#__PURE__*/function (_React$Component) {
       });
     }
   }, {
+    key: "addFavorite",
+    value: function addFavorite(id) {
+      var _this5 = this;
+
+      var token = localStorage.getItem('token');
+
+      _axios.default.post("https://pocket-movies.herokuapp.com/users/favorites/push/".concat(id), {}, {
+        headers: {
+          Authorization: "Bearer ".concat(token)
+        }
+      }).then(function (res) {
+        _this5.getProfile(token);
+      }).catch(function (err) {
+        return console.error(err);
+      });
+    }
+  }, {
+    key: "removeFavorite",
+    value: function removeFavorite(id) {
+      var _this6 = this;
+
+      var token = localStorage.getItem('token');
+
+      _axios.default.post("https://pocket-movies.herokuapp.com/users/favorites/pull/".concat(id), {}, {
+        headers: {
+          Authorization: "Bearer ".concat(token)
+        }
+      }).then(function (res) {
+        _this6.getProfile(token);
+      }).catch(function (err) {
+        return console.error(err);
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this5 = this;
+      var _this7 = this;
 
       var _this$state = this.state,
           user = _this$state.user,
@@ -52422,10 +52525,10 @@ var MainView = /*#__PURE__*/function (_React$Component) {
       return /*#__PURE__*/_react.default.createElement(_reactRouterDom.BrowserRouter, null, /*#__PURE__*/_react.default.createElement(_header.default, {
         user: user,
         onLogout: function onLogout(setNull) {
-          return _this5.onLogout(setNull);
+          return _this7.onLogout(setNull);
         },
         onSearch: function onSearch(searchParams, accessToken) {
-          return _this5.onSearch(searchParams, accessToken);
+          return _this7.onSearch(searchParams, accessToken);
         }
       }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Row, {
         className: "main-view justify-content-md-center"
@@ -52435,7 +52538,7 @@ var MainView = /*#__PURE__*/function (_React$Component) {
         render: function render() {
           if (!user) return /*#__PURE__*/_react.default.createElement(_loginView.default, {
             onLoggedIn: function onLoggedIn(user) {
-              return _this5.onLoggedIn(user);
+              return _this7.onLoggedIn(user);
             }
           });
           if (!movies) return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Spinner, {
@@ -52449,7 +52552,15 @@ var MainView = /*#__PURE__*/function (_React$Component) {
               key: index
             }, /*#__PURE__*/_react.default.createElement(_movieCard.default, {
               key: movie._id,
-              movie: movie
+              movie: movie,
+              favorites: favorites,
+              AddFavorites: _addFavorites.default,
+              addFavorite: function addFavorite(movieID) {
+                return _this7.addFavorite(movieID);
+              },
+              removeFavorite: function removeFavorite(movieID) {
+                return _this7.removeFavorite(movieID);
+              }
             }));
           });
         }
@@ -52473,7 +52584,7 @@ var MainView = /*#__PURE__*/function (_React$Component) {
               history = _ref2.history;
           if (!user) return /*#__PURE__*/_react.default.createElement(_loginView.default, {
             onLoggedIn: function onLoggedIn(user) {
-              return _this5.onLoggedIn(user);
+              return _this7.onLoggedIn(user);
             }
           });
           if (!movies) return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Spinner, {
@@ -52498,7 +52609,7 @@ var MainView = /*#__PURE__*/function (_React$Component) {
               history = _ref3.history;
           if (!user) return /*#__PURE__*/_react.default.createElement(_loginView.default, {
             onLoggedIn: function onLoggedIn(user) {
-              return _this5.onLoggedIn(user);
+              return _this7.onLoggedIn(user);
             }
           });
           if (!movies) return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Spinner, {
@@ -52525,7 +52636,7 @@ var MainView = /*#__PURE__*/function (_React$Component) {
               history = _ref4.history;
           if (!user) return /*#__PURE__*/_react.default.createElement(_loginView.default, {
             onLoggedIn: function onLoggedIn(user) {
-              return _this5.onLoggedIn(user);
+              return _this7.onLoggedIn(user);
             }
           });
           if (!movies) return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Spinner, {
@@ -52553,7 +52664,7 @@ var MainView = /*#__PURE__*/function (_React$Component) {
           var history = _ref5.history;
           if (!user) return /*#__PURE__*/_react.default.createElement(_loginView.default, {
             onLoggedIn: function onLoggedIn(user) {
-              return _this5.onLoggedIn(user);
+              return _this7.onLoggedIn(user);
             }
           });
           if (!profile) return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Spinner, {
@@ -52565,7 +52676,7 @@ var MainView = /*#__PURE__*/function (_React$Component) {
           }, /*#__PURE__*/_react.default.createElement(_profileView.default, {
             profile: profile,
             onLogout: function onLogout(setNull) {
-              return _this5.onLogout(setNull);
+              return _this7.onLogout(setNull);
             },
             onBackClick: function onBackClick() {
               return history.goBack();
@@ -52579,7 +52690,7 @@ var MainView = /*#__PURE__*/function (_React$Component) {
           var history = _ref6.history;
           if (!user) return /*#__PURE__*/_react.default.createElement(_loginView.default, {
             onLoggedIn: function onLoggedIn(user) {
-              return _this5.onLoggedIn(user);
+              return _this7.onLoggedIn(user);
             }
           });
           if (!profile) return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Spinner, {
@@ -52601,16 +52712,13 @@ var MainView = /*#__PURE__*/function (_React$Component) {
         render: function render() {
           if (!user) return /*#__PURE__*/_react.default.createElement(_loginView.default, {
             onLoggedIn: function onLoggedIn(user) {
-              return _this5.onLoggedIn(user);
+              return _this7.onLoggedIn(user);
             }
           });
           if (!favorites) return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Spinner, {
             animation: "border",
             role: "status"
           });
-          {
-            console.log(favorites);
-          }
           return favorites.map(function (movie, index) {
             return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
               md: 3,
@@ -52618,7 +52726,15 @@ var MainView = /*#__PURE__*/function (_React$Component) {
               key: index
             }, /*#__PURE__*/_react.default.createElement(_movieCard.default, {
               key: movie._id,
-              movie: favorites
+              movie: movie,
+              favorites: favorites,
+              AddFavorites: _addFavorites.default,
+              addFavorite: function addFavorite(movieID) {
+                return _this7.addFavorite(movieID);
+              },
+              removeFavorite: function removeFavorite(movieID) {
+                return _this7.removeFavorite(movieID);
+              }
             }));
           });
         }
@@ -52630,7 +52746,7 @@ var MainView = /*#__PURE__*/function (_React$Component) {
 }(_react.default.Component);
 
 exports.default = MainView;
-},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","../login-view/login-view":"components/login-view/login-view.jsx","../movie-card/movie-card":"components/movie-card/movie-card.jsx","../movie-view/movie-view":"components/movie-view/movie-view.jsx","../director-view/director-view":"components/director-view/director-view.jsx","../genre-view/genre-view":"components/genre-view/genre-view.jsx","../register-view/register-view":"components/register-view/register-view.jsx","../header/header":"components/header/header.jsx","../profile-view/profile-view":"components/profile-view/profile-view.jsx","../update-view/update-view":"components/update-view/update-view.jsx","./main-view.scss":"components/main-view/main-view.scss"}],"../node_modules/bootswatch/dist/darkly/bootstrap.min.css":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","../login-view/login-view":"components/login-view/login-view.jsx","../movie-card/movie-card":"components/movie-card/movie-card.jsx","../movie-view/movie-view":"components/movie-view/movie-view.jsx","../director-view/director-view":"components/director-view/director-view.jsx","../genre-view/genre-view":"components/genre-view/genre-view.jsx","../register-view/register-view":"components/register-view/register-view.jsx","../header/header":"components/header/header.jsx","../profile-view/profile-view":"components/profile-view/profile-view.jsx","../update-view/update-view":"components/update-view/update-view.jsx","../add-favorites/add-favorites":"components/add-favorites/add-favorites.jsx","./main-view.scss":"components/main-view/main-view.scss"}],"../node_modules/bootswatch/dist/darkly/bootstrap.min.css":[function(require,module,exports) {
 
         var reloadCSS = require('_css_loader');
         module.hot.dispose(reloadCSS);
@@ -52734,7 +52850,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61947" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51697" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
