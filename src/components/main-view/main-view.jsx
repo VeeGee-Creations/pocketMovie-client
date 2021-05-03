@@ -12,7 +12,6 @@ import RegisterView from '../register-view/register-view';
 import Header from '../header/header';
 import ProfileView from '../profile-view/profile-view';
 import UpdateView from '../update-view/update-view';
-import AddFavorites from '../add-favorites/add-favorites';
 
 import './main-view.scss';
 
@@ -137,7 +136,7 @@ export default class MainView extends React.Component {
                         if(!movies) return <Spinner animation="border" role="status"/>;
                         return movies.map((movie, index) => (
                             <Col md={3} sm={6} key={index}>
-                                <MovieCard key={movie._id} movie={movie} favorites={favorites} AddFavorites={AddFavorites} addFavorite={movieID => this.addFavorite(movieID)} removeFavorite={movieID => this.removeFavorite(movieID)}/>
+                                <MovieCard key={movie._id} movie={movie} favorites={favorites} addFavorite={movieID => this.addFavorite(movieID)} removeFavorite={movieID => this.removeFavorite(movieID)}/>
                             </Col>
                         ))
                     }}/>
@@ -185,7 +184,7 @@ export default class MainView extends React.Component {
                         if(!favorites) return <Spinner animation="border" role="status"/>;
                         return favorites.map((movie, index) => (
                             <Col md={3} sm={6} key={index}>
-                                <MovieCard key={movie._id} movie={movie} favorites={favorites} AddFavorites={AddFavorites}  addFavorite={movieID => this.addFavorite(movieID)} removeFavorite={movieID => this.removeFavorite(movieID)}/>
+                                <MovieCard key={movie._id} movie={movie} favorites={favorites} addFavorite={movieID => this.addFavorite(movieID)} removeFavorite={movieID => this.removeFavorite(movieID)}/>
                             </Col>
                         ))
                     }}/>

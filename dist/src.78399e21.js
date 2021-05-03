@@ -51371,7 +51371,52 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/movie-card/movie-card.jsx":[function(require,module,exports) {
+},{"_css_loader":"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/add-favorites/add-favorites.jsx":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AddFavorites = function AddFavorites(props) {
+  var favMovie = props.favorites && props.favorites.find(function (fav) {
+    return fav._id === props.movie._id;
+  });
+  if (favMovie) return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("span", {
+    className: "mr-2"
+  }, "Remove From Favorites"), /*#__PURE__*/_react.default.createElement("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    width: "16",
+    height: "16",
+    fill: "red",
+    className: "bi bi-heart-fill",
+    viewBox: "0 0 16 16"
+  }, /*#__PURE__*/_react.default.createElement("path", {
+    fillRule: "evenodd",
+    d: "M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+  })));
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("span", {
+    className: "mr-2"
+  }, "Add to Favorites"), /*#__PURE__*/_react.default.createElement("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    width: "16",
+    height: "16",
+    fill: "currentColor",
+    className: "bi bi-heart",
+    viewBox: "0 0 16 16"
+  }, /*#__PURE__*/_react.default.createElement("path", {
+    d: "m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"
+  })));
+};
+
+var _default = AddFavorites;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js"}],"components/movie-card/movie-card.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -51390,6 +51435,8 @@ var _reactDotdotdot = _interopRequireDefault(require("react-dotdotdot"));
 var _reactRouterDom = require("react-router-dom");
 
 require("./movie-card.scss");
+
+var _addFavorites = _interopRequireDefault(require("../add-favorites/add-favorites"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -51427,43 +51474,13 @@ var MovieCard = /*#__PURE__*/function (_React$Component) {
   }
 
   _createClass(MovieCard, [{
-    key: "isFavorite",
-    value: function isFavorite() {
-      var _this = this;
-
-      var favMovie = this.props.favorites && this.props.favorites.find(function (fav) {
-        return fav._id === _this.props.movie._id;
-      });
-      if (favMovie) return /*#__PURE__*/_react.default.createElement("svg", {
-        xmlns: "http://www.w3.org/2000/svg",
-        width: "16",
-        height: "16",
-        fill: "red",
-        className: "bi bi-heart-fill",
-        viewBox: "0 0 16 16"
-      }, /*#__PURE__*/_react.default.createElement("path", {
-        fillRule: "evenodd",
-        d: "M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
-      }));
-      return /*#__PURE__*/_react.default.createElement("svg", {
-        xmlns: "http://www.w3.org/2000/svg",
-        width: "16",
-        height: "16",
-        fill: "currentColor",
-        className: "bi bi-heart",
-        viewBox: "0 0 16 16"
-      }, /*#__PURE__*/_react.default.createElement("path", {
-        d: "m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"
-      }));
-    }
-  }, {
     key: "handleFavorite",
     value: function handleFavorite() {
-      var _this2 = this;
+      var _this = this;
 
       // console.log('click')
       var favMovie = this.props.favorites && this.props.favorites.find(function (fav) {
-        return fav._id === _this2.props.movie._id;
+        return fav._id === _this.props.movie._id;
       });
       if (favMovie) return this.props.removeFavorite(this.props.movie._id);
       return this.props.addFavorite(this.props.movie._id);
@@ -51471,11 +51488,11 @@ var MovieCard = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this2 = this;
 
       var _this$props = this.props,
           movie = _this$props.movie,
-          AddFavorites = _this$props.AddFavorites;
+          favorites = _this$props.favorites;
       var ID = movie._id,
           ImageURL = movie.ImageURL,
           Title = movie.Title,
@@ -51498,10 +51515,11 @@ var MovieCard = /*#__PURE__*/function (_React$Component) {
       }, "Release: ".concat(Release)))), /*#__PURE__*/_react.default.createElement("div", {
         className: "overlay d-flex align-items-center justify-content-center",
         onClick: function onClick() {
-          return _this3.handleFavorite();
+          return _this2.handleFavorite();
         }
-      }, /*#__PURE__*/_react.default.createElement(AddFavorites, {
-        isFavorite: this.isFavorite()
+      }, /*#__PURE__*/_react.default.createElement(_addFavorites.default, {
+        movie: movie,
+        favorites: favorites
       })));
     }
   }]);
@@ -51517,7 +51535,7 @@ MovieCard.propTypes = {
     Release: _propTypes.default.string
   }).isRequired
 };
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-dotdotdot":"../node_modules/react-dotdotdot/src/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./movie-card.scss":"components/movie-card/movie-card.scss"}],"components/movie-view/movie-view.scss":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-dotdotdot":"../node_modules/react-dotdotdot/src/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./movie-card.scss":"components/movie-card/movie-card.scss","../add-favorites/add-favorites":"components/add-favorites/add-favorites.jsx"}],"components/movie-view/movie-view.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -52271,28 +52289,7 @@ function UpdateView(props) {
     onClick: onBackClick
   }, "Cancel"))))))));
 }
-},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","axios":"../node_modules/axios/index.js"}],"components/add-favorites/add-favorites.jsx":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireDefault(require("react"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var AddFavorites = function AddFavorites(props) {
-  var isFavorite = props.isFavorite;
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("span", {
-    className: "mr-2"
-  }, "Add to Favorites"), isFavorite);
-};
-
-var _default = AddFavorites;
-exports.default = _default;
-},{"react":"../node_modules/react/index.js"}],"components/main-view/main-view.scss":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","axios":"../node_modules/axios/index.js"}],"components/main-view/main-view.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -52330,8 +52327,6 @@ var _header = _interopRequireDefault(require("../header/header"));
 var _profileView = _interopRequireDefault(require("../profile-view/profile-view"));
 
 var _updateView = _interopRequireDefault(require("../update-view/update-view"));
-
-var _addFavorites = _interopRequireDefault(require("../add-favorites/add-favorites"));
 
 require("./main-view.scss");
 
@@ -52554,7 +52549,6 @@ var MainView = /*#__PURE__*/function (_React$Component) {
               key: movie._id,
               movie: movie,
               favorites: favorites,
-              AddFavorites: _addFavorites.default,
               addFavorite: function addFavorite(movieID) {
                 return _this7.addFavorite(movieID);
               },
@@ -52728,7 +52722,6 @@ var MainView = /*#__PURE__*/function (_React$Component) {
               key: movie._id,
               movie: movie,
               favorites: favorites,
-              AddFavorites: _addFavorites.default,
               addFavorite: function addFavorite(movieID) {
                 return _this7.addFavorite(movieID);
               },
@@ -52746,7 +52739,7 @@ var MainView = /*#__PURE__*/function (_React$Component) {
 }(_react.default.Component);
 
 exports.default = MainView;
-},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","../login-view/login-view":"components/login-view/login-view.jsx","../movie-card/movie-card":"components/movie-card/movie-card.jsx","../movie-view/movie-view":"components/movie-view/movie-view.jsx","../director-view/director-view":"components/director-view/director-view.jsx","../genre-view/genre-view":"components/genre-view/genre-view.jsx","../register-view/register-view":"components/register-view/register-view.jsx","../header/header":"components/header/header.jsx","../profile-view/profile-view":"components/profile-view/profile-view.jsx","../update-view/update-view":"components/update-view/update-view.jsx","../add-favorites/add-favorites":"components/add-favorites/add-favorites.jsx","./main-view.scss":"components/main-view/main-view.scss"}],"../node_modules/bootswatch/dist/darkly/bootstrap.min.css":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","../login-view/login-view":"components/login-view/login-view.jsx","../movie-card/movie-card":"components/movie-card/movie-card.jsx","../movie-view/movie-view":"components/movie-view/movie-view.jsx","../director-view/director-view":"components/director-view/director-view.jsx","../genre-view/genre-view":"components/genre-view/genre-view.jsx","../register-view/register-view":"components/register-view/register-view.jsx","../header/header":"components/header/header.jsx","../profile-view/profile-view":"components/profile-view/profile-view.jsx","../update-view/update-view":"components/update-view/update-view.jsx","./main-view.scss":"components/main-view/main-view.scss"}],"../node_modules/bootswatch/dist/darkly/bootstrap.min.css":[function(require,module,exports) {
 
         var reloadCSS = require('_css_loader');
         module.hot.dispose(reloadCSS);
