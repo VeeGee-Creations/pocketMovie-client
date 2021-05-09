@@ -1,0 +1,10 @@
+$color: #007053;
+
+.movie-view-link {
+    color: $color;
+
+    &:hover {
+        text-decoration: underline;
+        color: $color;
+    }
+}
