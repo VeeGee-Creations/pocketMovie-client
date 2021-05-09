@@ -4,9 +4,7 @@
   "description": "",
   "main": "src/index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "predeploy": "rm -rf dist && parcel build src/index.html --no-minify",
-    "deploy": "git subtree push --prefix dist origin gh-page"
+    "dev": "parcel src/index.html"
   },
   "repository": {
     "type": "git",
@@ -23,6 +21,7 @@
     "bootswatch": "^4.6.0",
     "clamp-js-main": "^0.11.6",
     "email-prop-type": "^3.0.1",
+    "parcel": "^2.0.0-beta.2",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-bootstrap": "^1.5.2",
