@@ -17,6 +17,7 @@
   },
   "homepage": "https://veegee-creations.github.io/pocketMovie-client",
   "dependencies": {
+    "@parcel/transformer-sass": "^2.0.0-alpha.3",
     "axios": "^0.21.1",
     "bootswatch": "^4.6.0",
     "clamp-js-main": "^0.11.6",
