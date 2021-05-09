@@ -1,8 +1,10 @@
 import React from 'react';
+import {connect} from 'react-redux';
 
 const AddFavorites = (props) => {
 
-        const favMovie = props.favorites && props.favorites.find(fav => fav._id === props.movie._id);
+        const  {favorites, movie} = props;
+        const favMovie = favorites.find(fav => fav._id === movie._id);
         if(favMovie) return (
             <>
                 <span className="mr-2">Remove From Favorites</span>
@@ -38,4 +40,10 @@ const AddFavorites = (props) => {
         );
 }
 
-export default AddFavorites;
+let mapStateToProps = state => {
+    return {
+        favorites: state.favorites
+    }
+}
+
+export default connect(mapStateToProps)(AddFavorites);

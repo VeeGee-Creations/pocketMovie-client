@@ -2,9 +2,12 @@ import React from 'react';
 import axios from 'axios';
 import {Row, Col, Spinner} from 'react-bootstrap';
 import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
+
+import {setMovies, setUser, setFavorites, setProfile, setGenres, setDirectors} from '../../actions/actions';
+import MoviesList from '../movies-list/movies-list';
 
 import LoginView from '../login-view/login-view';
-import MovieCard from '../movie-card/movie-card';
 import MovieView from '../movie-view/movie-view';
 import DirectorView from '../director-view/director-view';
 import GenreView from '../genre-view/genre-view';
@@ -15,25 +18,16 @@ import UpdateView from '../update-view/update-view';
 
 import './main-view.scss';
 
-export default class MainView extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            movies: null,
-            user: null,
-            profile: null,
-            favorites: null,
-        };
-    }
+class MainView extends React.Component {
 
     componentDidMount() {
         const accessToken = localStorage.getItem('token');
         if(accessToken) {
-            this.setState({
-                user: localStorage.getItem('user')
-            });
-            if(!this.movies) this.getMovies(accessToken);
-            if(!this.profile || !this.favorites) this.getProfile(accessToken);
+            this.props.setUser(localStorage.getItem('user'));
+            if(this.props.movies.length < 1) this.getMovies(accessToken);
+            if(this.props.profile.length < 1 || this.props.favorites.length < 1) this.getProfile(accessToken);
+            if(this.props.genres.length < 1) this.getGenres(accessToken);
+            if(this.props.directors.length < 1) this.getDirectors(accessToken);
         }
     }
 
@@ -42,43 +36,21 @@ export default class MainView extends React.Component {
             headers: {Authorization: `Bearer ${token}`}
         })
         .then(res => {
-            this.setState({
-                movies: res.data
-            });
-        })
-        .catch(err => console.error(err));
-    }
-    
-    onSearch(searchParams, token) {
-        this.setState({movies: null});
-        axios.get(`https://pocket-movies.herokuapp.com/movies/${searchParams}`, {
-            headers: {Authorization: `Bearer ${token}`}
-        })
-        .then(res => {
-            this.setState({
-                movies: res.data
-            });
+            this.props.setMovies(res.data);
         })
         .catch(err => console.error(err));
     }
 
     onLoggedIn(authData) {
-        this.setState({
-            user: authData.user.Username,
-        });
+
+        this.props.setUser(authData.user.Username);
 
         localStorage.setItem('token', authData.token);
         localStorage.setItem('user', authData.user.Username);
         this.getMovies(authData.token);
         this.getProfile(authData.token);
-    }
-
-    onLogout(setNull) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        this.setState({
-            user: setNull,
-        });
+        this.getDirectors(authData.token);
+        this.getGenres(authData.token);
     }
 
     getProfile(token){
@@ -93,103 +65,103 @@ export default class MainView extends React.Component {
             };
             const favoritesData = res.data.Favorites;
             
-            this.setState({
-                profile: profileData,
-                favorites: favoritesData
-            });
+            this.props.setProfile(profileData);
+            this.props.setFavorites(favoritesData);
+
         })
         .catch(err => console.error(err));
     }
 
-    addFavorite(id) {
-        const token = localStorage.getItem('token');
-        axios.post(`https://pocket-movies.herokuapp.com/users/favorites/push/${id}`,{}, {
+    getDirectors(token) {
+        axios.get('https://pocket-movies.herokuapp.com/directors', {
             headers: {Authorization: `Bearer ${token}`}
         })
         .then(res => {
-            this.getProfile(token);
+            this.props.setDirectors(res.data);
         })
         .catch(err => console.error(err));
     }
 
-    removeFavorite(id) {
-        const token = localStorage.getItem('token');
-        axios.post(`https://pocket-movies.herokuapp.com/users/favorites/pull/${id}`,{}, {
+    getGenres(token) {
+        axios.get('https://pocket-movies.herokuapp.com/genres', {
             headers: {Authorization: `Bearer ${token}`}
         })
         .then(res => {
-            this.getProfile(token);
+            this.props.setGenres(res.data);
         })
         .catch(err => console.error(err));
     }
     
     render() {  
-        const {user, movies, profile, favorites} = this.state; 
-        if(!user) document.body.classList.add('no-header');
-        if(user) document.body.classList.remove('no-header');
+        const {user, movies, favorites, profile} = this.props;
+        if(user.length < 1) document.body.classList.add('no-header');
+        if(user.length > 0) document.body.classList.remove('no-header');
         return(
             <Router>
-                <Header user={user} onLogout={setNull => this.onLogout(setNull)} onSearch={(searchParams, accessToken) => this.onSearch(searchParams, accessToken)}/>
-                <Row className="main-view justify-content-md-center">
+                <Header/>
+                <Row className="main-view justify-content-center">
                     <Route exact path="/" render={() => {
-                        if(!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
-                        if(!movies) return <Spinner animation="border" role="status"/>;
-                        return movies.map((movie, index) => (
-                            <Col md={3} sm={6} key={index}>
-                                <MovieCard key={movie._id} movie={movie} favorites={favorites} addFavorite={movieID => this.addFavorite(movieID)} removeFavorite={movieID => this.removeFavorite(movieID)}/>
-                            </Col>
-                        ))
+                        if(user.length < 1) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
+                        return <MoviesList movies={movies}/>;
                     }}/>
                     <Route path="/register" render={({history}) => {
-                        if(user) return <Redirect to="/"/>
+                        if(user.length > 0) return <Redirect to="/"/>
                         return <RegisterView onBackClick={() => history.goBack()}/>
                     }}/>
                     <Route path="/movies/:movieID" render={({match, history}) => {
-                        if(!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
-                        if(!movies) return <Spinner animation="border" role="status"/>;
+                        if(user.length < 1) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
+                        if(movies.length < 1) return <Spinner animation="border" role="status"/>;
                         return <Col md={8}>
                         <MovieView movie={movies.find(movie => movie._id === match.params.movieID)} onBackClick={() => history.goBack()}/>
                     </Col>
                     }}/>
                     <Route path="/directors/:name" render={({match, history}) => {
-                        if(!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
-                        if(!movies) return <Spinner animation="border" role="status"/>;
+                        if(user.length < 1) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
+                        if(movies.length < 1) return <Spinner animation="border" role="status"/>;
                         return <Col md={8}>
-                            <DirectorView director={movies.find(movie => movie.Directors.find(director => director.Name === match.params.name)).Directors} onBackClick={() => history.goBack()}/>
+                            <DirectorView match={match} onBackClick={() => history.goBack()}/>
                         </Col>
                     }}/>
                     <Route path="/genres/:name" render={({match, history}) =>{
-                        if(!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
-                        if(!movies) return <Spinner animation="border" role="status"/>;
+                        if(user.length < 1) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
+                        if(movies.length < 1) return <Spinner animation="border" role="status"/>;
                         return <Col md={8}>
-                            <GenreView genre={movies.find(movie => movie.Genres.find(genre => genre.Name === match.params.name)).Genres} match={match.params.name} onBackClick={() => history.goBack()}/>
+                            <GenreView match={match} onBackClick={() => history.goBack()}/>
                         </Col>
                     }}/>
                     <Route exact path="/profile" render={({history}) =>{
-                        if(!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
-                        if(!profile) return <Spinner animation="border" role="status"/>;
+                        if(user.length < 1) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
+                        if(profile.length < 1) return <Spinner animation="border" role="status"/>;
                         return <Col md={12}>
-                            <ProfileView profile={profile} onLogout={setNull => this.onLogout(setNull)} onBackClick={() => history.goBack()}/>
+                            <ProfileView onBackClick={() => history.goBack()}/>
                         </Col>
                     }}/>
                     <Route exact path="/profile/update" render={({history}) =>{
-                        if(!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
-                        if(!profile) return <Spinner animation="border" role="status"/>;
+                        if(user.length < 1) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
+                        if(profile.length < 1) return <Spinner animation="border" role="status"/>;
                         return <Col md={12}>
-                            <UpdateView profile={profile} onBackClick={() => history.goBack()}/>
+                            <UpdateView onBackClick={() => history.goBack()}/>
                         </Col>
                     }}/>
                     <Route exact path="/favorites" render={() => {
-                        if(!user) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
-                        if(!favorites) return <Spinner animation="border" role="status"/>;
-                        return favorites.map((movie, index) => (
-                            <Col md={3} sm={6} lg={3} key={index}>
-                                <MovieCard key={movie._id} movie={movie} favorites={favorites} addFavorite={movieID => this.addFavorite(movieID)} removeFavorite={movieID => this.removeFavorite(movieID)}/>
-                            </Col>
-                        ))
+                        if(user.length < 1) return <LoginView onLoggedIn={user => this.onLoggedIn(user)}/>;
+                        return <MoviesList movies={favorites}/>
                     }}/>
                 </Row>
             </Router>
         );
     }
 }
+
+let mapStateToProps = state => {
+    return {
+        movies: state.movies,
+        user: state.user,
+        profile: state.profile,
+        favorites: state.favorites,
+        genres: state.genres,
+        directors: state.directors
+    }
+};
+
+export default connect(mapStateToProps, {setMovies, setUser, setFavorites, setProfile, setGenres, setDirectors})(MainView);

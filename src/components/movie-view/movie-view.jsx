@@ -7,10 +7,11 @@ import './movie-view.scss';
 
 export default function MovieView(props) {
 
-    const movie = props.movie;
+    const {movie} = props;
     const {Title, Release, Synopsis, Directors, Actors, Genres, ImageURL} = movie;
-    const onBackClick = () => props.onBackClick();
-
+    
+        const onBackClick = () => props.onBackClick();
+    
     return(
         <Row className="main-view justify-content-md-center">
             <Col md={9}>

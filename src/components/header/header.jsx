@@ -1,22 +1,24 @@
-import React, {useState} from 'react';
-import {Navbar, Nav, Form, FormControl, Button,} from 'react-bootstrap';
+import React from 'react';
+import {Navbar, Nav, Button,} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
+
+import VisibilityFilterInput from '../visibility-filter-input/visibility-filter-input';
+import {setUser} from '../../actions/actions';
 
 import './header.scss';
 
-export default function Header(props) {
-    const [searchParam, setSearchParam] = useState('');
-    const {onLogout, onSearch, user} = props;
+function Header(props) {
+    const {user, visibilityFilter, setUser} = props;
 
-    const handleLogout = () => onLogout(null);
-
-    const handleSearch= (e) =>{
-        e.preventDefault();
-        const accessToken = localStorage.getItem('token');
-        onSearch(searchParam, accessToken);
+    const onLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setUser('');
+        window.open('/', '_self');
     }
 
-    if(!user) return null
+    if(user.length < 1) return null
     return (
         <Navbar bg="dark" variant="dark" expand="lg" fixed="top">
             <Navbar.Brand href="/">
@@ -24,10 +26,7 @@ export default function Header(props) {
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
-                <Form inline className="ml-auto justify-content-center align-items-center">
-                    <FormControl type="text" placeholder="Search" value={searchParam} onChange={e => setSearchParam(e.target.value)} size="lg" className="mr=sm-2"/>
-                    <Button type="submit" variant="outline-success" onClick={handleSearch}>Search</Button>
-                </Form>
+                <VisibilityFilterInput visibilityFilter={visibilityFilter}/>
                 <Nav className="ml-auto">
                     <Link to="/profile">
                         <Button block size="lg" variant="link">{user}</Button>
@@ -35,9 +34,18 @@ export default function Header(props) {
                     <Link to="/favorites">
                         <Button block size="lg" variant="link">Favorites</Button>
                     </Link>
-                    <Button block size="md" onClick= {handleLogout}>Logout</Button>
+                    <Button block size="md" onClick= {onLogout}>Logout</Button>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
     )
 }
+
+const mapStateToProps = state => {
+    return {
+        visibilityFilter: state.visibilityFilter,
+        user: state.user
+    }
+};
+
+export default connect(mapStateToProps, {setUser})(Header);

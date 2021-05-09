@@ -1,11 +1,14 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { Card, Row, Col, Button } from 'react-bootstrap';
+import {connect} from 'react-redux';
 
 import './genre-view.scss';
 
-export default function GenreView(props){
-    const {genre, match, onBackClick} = props;
+function GenreView(props){
+    const {match, onBackClick, genres} = props;
+    const genre = genres.find(genre => genre.Name === match.params.name);
+    const {Name, Description} = genre;
 
     useEffect(() => {
         document.body.classList.add('no-header');
@@ -15,21 +18,14 @@ export default function GenreView(props){
         }
     }), [];
 
-    const filterGenre = () => { 
-        const data = genre.find(genre => genre.Name == match);
-        return data;
-    }
-
-    const genreData = filterGenre();
-
     return(
         <Row className="justify-content-md-center">
             <Col md={9}>
         <Card style={{height: 'auto', marginBottom: '0'}}>
             <Card.Body>
-                <Card.Title>{genreData.Name}</Card.Title>
-                <Card.Text>{genreData.Description}</Card.Text>
-                <Button onClick={() => onBackClick()} variant="link">Back</Button>
+                <Card.Title>{Name}</Card.Title>
+                <Card.Text>{Description}</Card.Text>
+                <Button onClick={onBackClick} variant="link">Back</Button>
             </Card.Body>
         </Card>
         </Col>
@@ -49,3 +45,11 @@ GenreView.propTypes = {
     // }).isRequired,
     onBackClick: PropTypes.func,
 }
+
+let mapStateToProps = state => {
+    return{
+        genres: state.genres
+    }
+}
+
+export default connect(mapStateToProps)(GenreView);

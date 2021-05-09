@@ -1,9 +1,12 @@
 import React, {useState} from 'react';
 import {Row, Col, Button, Card, Form} from 'react-bootstrap';
 import axios from 'axios';
+import {connect} from 'react-redux';
 
-export default function UpdateView(props) {
-    const {onBackClick, profile} = props;
+import {setProfile} from '../../actions/actions';
+
+function UpdateView(props) {
+    const {onBackClick, profile, setProfile} = props;
     const {Username, Email, Birthday} = profile;
 
     const [username, setUsername] = useState(Username);
@@ -23,8 +26,15 @@ export default function UpdateView(props) {
             headers: {Authorization: `Bearer ${token}`}
         })
         .then(res => {
-            console.log(res.data)
-            window.open('/profile', '_self');
+            if(res.statusText === 'OK'){
+                setProfile({
+                    Username: username,
+                    Password: password,
+                    Email: email,
+                    Birthday: birthday
+                });
+                window.open('/profile', '_self');
+            }
         })
         .catch(e => {
             console.error('error updating the user')
@@ -68,3 +78,11 @@ export default function UpdateView(props) {
         </div>
     );
 }
+
+let mapStateToProps = state => {
+    return {
+        profile: state.profile
+    }
+};
+
+export default connect(mapStateToProps, {setProfile})(UpdateView);
