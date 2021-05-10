@@ -54795,8 +54795,13 @@ function RegisterView(props) {
     }).then(function (res) {
       window.open('/', '_self');
     }).catch(function (e) {
-      setAlertShow('show');
+      setAlertShow(true);
       setAlertMessage(e.response.data);
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
     });
   };
 
@@ -54820,14 +54825,14 @@ function RegisterView(props) {
         break;
 
       case 'password':
-        if (value.length > 0) setPasswordErr(null);
+        value.length > 7 ? setPasswordErr(null) : setPasswordErr('Minimum 8 characters Required');
         var password2Retest = value === password2 ? null : 'Passwords must match';
         setPassword(value);
         setPassword2Err(password2Retest);
         break;
 
       case 'password2':
-        var passwordTest = value.length > 0 && password.length < 1 ? 'Password is required' : null;
+        var passwordTest = value.length > 0 && password.length < 8 ? 'Minimum 8 characters Required' : null;
         var password2Test = value === password ? null : 'Passwords must match';
         setPassword2(value);
         setPasswordErr(passwordTest);
@@ -54843,7 +54848,7 @@ function RegisterView(props) {
   };
 
   var validateForm = function validateForm() {
-    return username.length > 0 && !usernameErr && email.length > 0 && !emailErr && password.length > 0 && !passwordErr && password2.length > 0 && !password2Err && birthday.length > 0;
+    return username.length > 0 && !usernameErr && email.length > 0 && !emailErr && password.length > 7 && !passwordErr && password2.length > 0 && !password2Err && birthday.length > 0;
   };
 
   return /*#__PURE__*/_react.default.createElement("div", {
@@ -54902,8 +54907,7 @@ function RegisterView(props) {
     type: "password",
     name: "password2",
     value: password2,
-    onChange: handleChange,
-    validated: "true"
+    onChange: handleChange
   }), /*#__PURE__*/_react.default.createElement("small", {
     className: "text-danger"
   }, password2Err)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
@@ -55288,8 +55292,13 @@ function UpdateView(props) {
         window.open('/profile', '_self');
       }
     }).catch(function (e) {
-      setAlertShow('show');
+      setAlertShow(true);
       setAlertMessage(e.response.data);
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
     });
   };
 
@@ -55313,14 +55322,14 @@ function UpdateView(props) {
         break;
 
       case 'password':
-        if (value.length > 0) setPasswordErr(null);
+        value.length > 7 ? setPasswordErr(null) : setPasswordErr('Minimum 8 characters Required');
         var password2Retest = value === password2 ? null : 'Passwords must match';
         setPassword(value);
         setPassword2Err(password2Retest);
         break;
 
       case 'password2':
-        var passwordTest = value.length > 0 && password.length < 1 ? 'Password is required' : null;
+        var passwordTest = value.length > 0 && password.length < 8 ? 'Minimum 8 characters Required' : null;
         var password2Test = value === password ? null : 'Passwords must match';
         setPassword2(value);
         setPasswordErr(passwordTest);
@@ -55399,8 +55408,7 @@ function UpdateView(props) {
     type: "password",
     name: "password2",
     value: password2,
-    onChange: handleChange,
-    validated: "true"
+    onChange: handleChange
   }), /*#__PURE__*/_react.default.createElement("small", {
     className: "text-danger"
   }, password2Err)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
@@ -55922,7 +55930,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64478" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53398" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

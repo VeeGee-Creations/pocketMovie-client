@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import emailPropType from 'email-prop-type';
-import {Form, Button, Card, Alert, InputGroup} from 'react-bootstrap';
+import {Form, Button, Card, Alert} from 'react-bootstrap';
 import axios from 'axios';
 
 const emailRegex = RegExp(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
@@ -36,8 +36,13 @@ export default function RegisterView(props) {
             window.open('/', '_self');
         })
         .catch(e => {
-            setAlertShow('show')
+            setAlertShow(true)
             setAlertMessage(e.response.data);
+            window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: 'smooth'
+            });
         });
     };
 
@@ -57,13 +62,13 @@ export default function RegisterView(props) {
                 setEmailErr(emailTest);
                 break;
             case 'password':
-                if(value.length > 0) setPasswordErr(null);
+                value.length > 7 ? setPasswordErr(null) : setPasswordErr('Minimum 8 characters Required');
                 const password2Retest = value === password2 ? null : 'Passwords must match';
                 setPassword(value);
                 setPassword2Err(password2Retest);
                 break;
             case 'password2':
-                const passwordTest = value.length > 0 && password.length < 1 ? 'Password is required' : null;
+                const passwordTest = value.length > 0 && password.length < 8 ? 'Minimum 8 characters Required' : null;
                 const password2Test = value === password ? null : 'Passwords must match';
                 setPassword2(value)
                 setPasswordErr(passwordTest);
@@ -74,10 +79,9 @@ export default function RegisterView(props) {
             default:
                 break;
         }
-
     }
 
-        const validateForm = () => username.length > 0 && !usernameErr && email.length > 0 && !emailErr && password.length > 0 && !passwordErr && password2.length > 0 && !password2Err && birthday.length > 0;
+        const validateForm = () => username.length > 0 && !usernameErr && email.length > 0 && !emailErr && password.length > 7 && !passwordErr && password2.length > 0 && !password2Err && birthday.length > 0;
 
         return (
             <div className="Register">
@@ -103,7 +107,7 @@ export default function RegisterView(props) {
                         </Form.Group>
                         <Form.Group size="lg" controlId="password2">
                             <Form.Label>Confirm Password</Form.Label>
-                            <Form.Control className={password2Err ? 'is-invalid' : null} type="password" name="password2" value={password2} onChange={handleChange} validated='true'/>
+                            <Form.Control className={password2Err ? 'is-invalid' : null} type="password" name="password2" value={password2} onChange={handleChange}/>
                             <small className="text-danger">{password2Err}</small>
                         </Form.Group>
                         <Form.Group size="lg" controlId="birthday">
