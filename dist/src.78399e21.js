@@ -54233,8 +54233,9 @@ function MoviesList(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, filteredMovies.map(function (movie, index) {
     return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
       lg: 4,
-      md: 3,
+      md: 6,
       sm: 6,
+      xs: 12,
       key: index
     }, /*#__PURE__*/_react.default.createElement(_movieCard.default, {
       key: movie._id,
@@ -55930,7 +55931,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53398" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55393" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
