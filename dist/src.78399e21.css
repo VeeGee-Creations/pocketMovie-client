@@ -32,6 +32,12 @@
   text-align: center;
   cursor: pointer;
 }
+
+@media (max-width: 768px) {
+  .overlay {
+    opacity: 1;
+  }
+}
 @media all and (min-width: 480px) {
   .Login {
     padding: 60px 0;
