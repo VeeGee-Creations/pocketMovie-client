@@ -54306,6 +54306,21 @@ function LoginView(props) {
       password = _useState4[0],
       setPassword = _useState4[1];
 
+  var _useState5 = (0, _react.useState)(''),
+      _useState6 = _slicedToArray(_useState5, 2),
+      alertMessage = _useState6[0],
+      setAlertMessage = _useState6[1];
+
+  var _useState7 = (0, _react.useState)(false),
+      _useState8 = _slicedToArray(_useState7, 2),
+      alertShow = _useState8[0],
+      setAlertShow = _useState8[1];
+
+  var _useState9 = (0, _react.useState)('warning'),
+      _useState10 = _slicedToArray(_useState9, 2),
+      alertVariant = _useState10[0],
+      setAlerVaiant = _useState10[1];
+
   var handleSubmit = function handleSubmit(e) {
     e.preventDefault();
 
@@ -54318,17 +54333,30 @@ function LoginView(props) {
       var data = res.data;
       props.onLoggedIn(data);
     }).catch(function (e) {
-      return console.error('no such user');
+      if (e.response.status === 400) {
+        return setAlertShow(true), setAlertMessage('Username or Password is incorrect');
+      }
+
+      console.error(e.response.data);
     });
   };
 
   var validateForm = function validateForm() {
-    return username.length > 0 && password.length > 0;
+    return username.length > 2 && password.length > 0;
   };
 
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "Login"
-  }, /*#__PURE__*/_react.default.createElement("h1", null, "Pocket Movies"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form, {
+  }, /*#__PURE__*/_react.default.createElement("h1", null, "Pocket Movies"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Alert, {
+    className: "alert",
+    role: "alert alert-warning",
+    variant: alertVariant,
+    show: alertShow,
+    onClose: function onClose() {
+      return setAlertShow(false);
+    },
+    dismissible: true
+  }, alertMessage), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form, {
     onSubmit: handleSubmit
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
     size: "lg",
@@ -54712,6 +54740,21 @@ function RegisterView(props) {
       birthday = _useState8[0],
       setBirthday = _useState8[1];
 
+  var _useState9 = (0, _react.useState)(''),
+      _useState10 = _slicedToArray(_useState9, 2),
+      alertMessage = _useState10[0],
+      setAlertMessage = _useState10[1];
+
+  var _useState11 = (0, _react.useState)(false),
+      _useState12 = _slicedToArray(_useState11, 2),
+      alertShow = _useState12[0],
+      setAlertShow = _useState12[1];
+
+  var _useState13 = (0, _react.useState)('warning'),
+      _useState14 = _slicedToArray(_useState13, 2),
+      alertVariant = _useState14[0],
+      setAlerVaiant = _useState14[1];
+
   var onBackClick = props.onBackClick;
 
   var handleSubmit = function handleSubmit(e) {
@@ -54725,17 +54768,27 @@ function RegisterView(props) {
     }).then(function (res) {
       window.open('/', '_self');
     }).catch(function (e) {
-      console.error('error registering the user');
+      setAlertShow('show');
+      setAlertMessage(e.response.data);
     });
   };
 
   var validateForm = function validateForm() {
-    return username.length > 0 && email.length > 0 && password.length > 0 && birthday.length > 0;
+    return username.length > 2 && email.length > 0 && password.length > 0 && birthday.length > 0;
   };
 
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "Register"
-  }, /*#__PURE__*/_react.default.createElement("h1", null, "Pocket Movies"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form, {
+  }, /*#__PURE__*/_react.default.createElement("h1", null, "Pocket Movies"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Alert, {
+    className: "alert",
+    role: "alert alert-warning",
+    variant: alertVariant,
+    show: alertShow,
+    onClose: function onClose() {
+      return setAlertShow(false);
+    },
+    dismissible: true
+  }, alertMessage), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form, {
     onSubmit: handleSubmit
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
     size: "lg",
@@ -54747,11 +54800,13 @@ function RegisterView(props) {
     onChange: function onChange(e) {
       return setUsername(e.target.value);
     }
-  })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
+  }), /*#__PURE__*/_react.default.createElement("small", {
+    id: "usernameHelp",
+    className: "form-text text-muted"
+  }, "Minimum 3 characters")), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
     size: "lg",
     controlId: "email"
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Label, null, "Email"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Control, {
-    autoFocus: true,
     type: "email",
     value: email,
     onChange: function onChange(e) {
@@ -55061,6 +55116,7 @@ function UpdateView(props) {
   var Username = profile.Username,
       Email = profile.Email,
       Birthday = profile.Birthday;
+  if (!Birthday) return window.open('/profile', '_self');
 
   var _useState = (0, _react.useState)(Username),
       _useState2 = _slicedToArray(_useState, 2),
@@ -55081,6 +55137,21 @@ function UpdateView(props) {
       _useState8 = _slicedToArray(_useState7, 2),
       birthday = _useState8[0],
       setBirthday = _useState8[1];
+
+  var _useState9 = (0, _react.useState)(''),
+      _useState10 = _slicedToArray(_useState9, 2),
+      alertMessage = _useState10[0],
+      setAlertMessage = _useState10[1];
+
+  var _useState11 = (0, _react.useState)(false),
+      _useState12 = _slicedToArray(_useState11, 2),
+      alertShow = _useState12[0],
+      setAlertShow = _useState12[1];
+
+  var _useState13 = (0, _react.useState)('warning'),
+      _useState14 = _slicedToArray(_useState13, 2),
+      alertVariant = _useState14[0],
+      setAlerVaiant = _useState14[1];
 
   var handleSubmit = function handleSubmit(e) {
     e.preventDefault();
@@ -55106,12 +55177,13 @@ function UpdateView(props) {
         window.open('/profile', '_self');
       }
     }).catch(function (e) {
-      console.error('error updating the user');
+      setAlertShow('show');
+      setAlertMessage(e.response.data);
     });
   };
 
   var validateForm = function validateForm() {
-    return username.length > 0 && email.length > 0 && password.length > 0 && birthday.length > 0;
+    return username.length > 2 && email.length > 0 && password.length > 0 && birthday.length > 0;
   };
 
   return /*#__PURE__*/_react.default.createElement("div", {
@@ -55120,7 +55192,16 @@ function UpdateView(props) {
     className: "justify-content-md-center"
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
     md: 12
-  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form, {
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Alert, {
+    className: "alert",
+    role: "alert alert-warning",
+    variant: alertVariant,
+    show: alertShow,
+    onClose: function onClose() {
+      return setAlertShow(false);
+    },
+    dismissible: true
+  }, alertMessage), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form, {
     onSubmit: handleSubmit
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
     size: "lg",
@@ -55132,7 +55213,10 @@ function UpdateView(props) {
     onChange: function onChange(e) {
       return setUsername(e.target.value);
     }
-  })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
+  }), /*#__PURE__*/_react.default.createElement("small", {
+    id: "usernameHelp",
+    className: "form-text text-muted"
+  }, "Minimum 3 characters")), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
     size: "lg",
     controlId: "email"
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Label, null, "Email"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Control, {
@@ -55154,7 +55238,7 @@ function UpdateView(props) {
   })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
     size: "lg",
     controlId: "birthday"
-  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Label, null, "Password"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Control, {
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Label, null, "Birthday"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Control, {
     type: "date",
     value: birthday,
     onChange: function onChange(e) {
@@ -55675,7 +55759,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57956" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55949" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

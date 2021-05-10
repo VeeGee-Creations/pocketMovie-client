@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import emailPropType from 'email-prop-type';
-import {Form, Button, Card} from 'react-bootstrap';
+import {Form, Button, Card, Alert} from 'react-bootstrap';
 import axios from 'axios';
 
 
@@ -10,6 +10,9 @@ export default function RegisterView(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [birthday, setBirthday] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertShow, setAlertShow] = useState(false);
+    const [alertVariant, setAlerVaiant] = useState('warning');
     const {onBackClick} = props;
 
 
@@ -25,25 +28,28 @@ export default function RegisterView(props) {
             window.open('/', '_self');
         })
         .catch(e => {
-            console.error('error registering the user')
+            setAlertShow('show')
+            setAlertMessage(e.response.data);
         });
     };
 
-    const validateForm = () => username.length > 0 && email.length > 0 && password.length > 0 && birthday.length > 0;
+    const validateForm = () => username.length > 2 && email.length > 0 && password.length > 0 && birthday.length > 0;
 
     return (
         <div className="Register">
             <h1>Pocket Movies</h1>
+            <Alert className="alert" role="alert alert-warning" variant={alertVariant} show={alertShow} onClose={() => setAlertShow(false)} dismissible>{alertMessage}</Alert>
             <Card>
                 <Card.Body>
                     <Form onSubmit={handleSubmit}>
                         <Form.Group size="lg" controlId="username">
                             <Form.Label>Username</Form.Label>
                             <Form.Control autoFocus type="text" value={username} onChange={e => setUsername(e.target.value)}/>
+                            <small id="usernameHelp" className="form-text text-muted">Minimum 3 characters</small>
                         </Form.Group>
                         <Form.Group size="lg" controlId="email">
                             <Form.Label>Email</Form.Label>
-                            <Form.Control autoFocus type="email" value={email} onChange={e => setEmail(e.target.value)}/>
+                            <Form.Control type="email" value={email} onChange={e => setEmail(e.target.value)}/>
                         </Form.Group>
                         <Form.Group size="lg" controlId="password">
                             <Form.Label>Password</Form.Label>
