@@ -54719,6 +54719,8 @@ function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "und
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+var emailRegex = RegExp(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
+
 function RegisterView(props) {
   var _useState = (0, _react.useState)(''),
       _useState2 = _slicedToArray(_useState, 2),
@@ -54737,23 +54739,48 @@ function RegisterView(props) {
 
   var _useState7 = (0, _react.useState)(''),
       _useState8 = _slicedToArray(_useState7, 2),
-      birthday = _useState8[0],
-      setBirthday = _useState8[1];
+      password2 = _useState8[0],
+      setPassword2 = _useState8[1];
 
   var _useState9 = (0, _react.useState)(''),
       _useState10 = _slicedToArray(_useState9, 2),
-      alertMessage = _useState10[0],
-      setAlertMessage = _useState10[1];
+      birthday = _useState10[0],
+      setBirthday = _useState10[1];
 
-  var _useState11 = (0, _react.useState)(false),
+  var _useState11 = (0, _react.useState)(''),
       _useState12 = _slicedToArray(_useState11, 2),
-      alertShow = _useState12[0],
-      setAlertShow = _useState12[1];
+      alertMessage = _useState12[0],
+      setAlertMessage = _useState12[1];
 
-  var _useState13 = (0, _react.useState)('warning'),
+  var _useState13 = (0, _react.useState)(false),
       _useState14 = _slicedToArray(_useState13, 2),
-      alertVariant = _useState14[0],
-      setAlerVaiant = _useState14[1];
+      alertShow = _useState14[0],
+      setAlertShow = _useState14[1];
+
+  var _useState15 = (0, _react.useState)('warning'),
+      _useState16 = _slicedToArray(_useState15, 2),
+      alertVariant = _useState16[0],
+      setAlerVaiant = _useState16[1];
+
+  var _useState17 = (0, _react.useState)(null),
+      _useState18 = _slicedToArray(_useState17, 2),
+      usernameErr = _useState18[0],
+      setUsernameErr = _useState18[1];
+
+  var _useState19 = (0, _react.useState)(null),
+      _useState20 = _slicedToArray(_useState19, 2),
+      emailErr = _useState20[0],
+      setEmailErr = _useState20[1];
+
+  var _useState21 = (0, _react.useState)(null),
+      _useState22 = _slicedToArray(_useState21, 2),
+      passwordErr = _useState22[0],
+      setPasswordErr = _useState22[1];
+
+  var _useState23 = (0, _react.useState)(null),
+      _useState24 = _slicedToArray(_useState23, 2),
+      password2Err = _useState24[0],
+      setPassword2Err = _useState24[1];
 
   var onBackClick = props.onBackClick;
 
@@ -54773,8 +54800,50 @@ function RegisterView(props) {
     });
   };
 
+  var handleChange = function handleChange(e) {
+    e.preventDefault();
+    var _e$target = e.target,
+        name = _e$target.name,
+        value = _e$target.value;
+
+    switch (name) {
+      case 'username':
+        var usernameTest = value.length < 3 ? 'Minimum 3 characters required' : null;
+        setUsernameErr(usernameTest);
+        setUsername(value);
+        break;
+
+      case 'email':
+        setEmail(value);
+        var emailTest = emailRegex.test(value) ? null : 'Invalid Email Address';
+        setEmailErr(emailTest);
+        break;
+
+      case 'password':
+        if (value.length > 0) setPasswordErr(null);
+        var password2Retest = value === password2 ? null : 'Passwords must match';
+        setPassword(value);
+        setPassword2Err(password2Retest);
+        break;
+
+      case 'password2':
+        var passwordTest = value.length > 0 && password.length < 1 ? 'Password is required' : null;
+        var password2Test = value === password ? null : 'Passwords must match';
+        setPassword2(value);
+        setPasswordErr(passwordTest);
+        setPassword2Err(password2Test);
+        break;
+
+      case 'birthday':
+        setBirthday(value);
+
+      default:
+        break;
+    }
+  };
+
   var validateForm = function validateForm() {
-    return username.length > 2 && email.length > 0 && password.length > 0 && birthday.length > 0;
+    return username.length > 0 && !usernameErr && email.length > 0 && !emailErr && password.length > 0 && !passwordErr && password2.length > 0 && !password2Err && birthday.length > 0;
   };
 
   return /*#__PURE__*/_react.default.createElement("div", {
@@ -54789,47 +54858,62 @@ function RegisterView(props) {
     },
     dismissible: true
   }, alertMessage), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form, {
+    noValidate: true,
     onSubmit: handleSubmit
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
     size: "lg",
     controlId: "username"
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Label, null, "Username"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Control, {
+    className: usernameErr ? 'is-invalid' : null,
     autoFocus: true,
+    name: "username",
     type: "text",
     value: username,
-    onChange: function onChange(e) {
-      return setUsername(e.target.value);
-    }
+    onChange: handleChange
   }), /*#__PURE__*/_react.default.createElement("small", {
-    id: "usernameHelp",
-    className: "form-text text-muted"
-  }, "Minimum 3 characters")), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
+    className: "text-danger"
+  }, usernameErr)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
     size: "lg",
     controlId: "email"
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Label, null, "Email"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Control, {
+    className: emailErr ? 'is-invalid' : null,
     type: "email",
+    name: "email",
     value: email,
-    onChange: function onChange(e) {
-      return setEmail(e.target.value);
-    }
-  })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
+    onChange: handleChange
+  }), /*#__PURE__*/_react.default.createElement("small", {
+    className: "text-danger"
+  }, emailErr)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
     size: "lg",
     controlId: "password"
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Label, null, "Password"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Control, {
+    className: passwordErr ? 'is-invalid' : null,
     type: "password",
+    name: "password",
     value: password,
-    onChange: function onChange(e) {
-      return setPassword(e.target.value);
-    }
-  })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
+    onChange: handleChange
+  }), /*#__PURE__*/_react.default.createElement("small", {
+    className: "text-danger"
+  }, passwordErr)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
+    size: "lg",
+    controlId: "password2"
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Label, null, "Confirm Password"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Control, {
+    className: password2Err ? 'is-invalid' : null,
+    type: "password",
+    name: "password2",
+    value: password2,
+    onChange: handleChange,
+    validated: "true"
+  }), /*#__PURE__*/_react.default.createElement("small", {
+    className: "text-danger"
+  }, password2Err)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
     size: "lg",
     controlId: "birthday"
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Label, null, "Birthday"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Control, {
     type: "date",
+    name: "birthday",
     value: birthday,
-    onChange: function onChange(e) {
-      return setBirthday(e.target.value);
-    }
+    onChange: handleChange
   })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
     block: true,
     size: "lg",
@@ -55109,6 +55193,8 @@ function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "und
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+var emailRegex = RegExp(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
+
 function UpdateView(props) {
   var onBackClick = props.onBackClick,
       profile = props.profile,
@@ -55133,25 +55219,50 @@ function UpdateView(props) {
       password = _useState6[0],
       setPassword = _useState6[1];
 
-  var _useState7 = (0, _react.useState)(Birthday.substr(0, 10)),
+  var _useState7 = (0, _react.useState)(''),
       _useState8 = _slicedToArray(_useState7, 2),
-      birthday = _useState8[0],
-      setBirthday = _useState8[1];
+      password2 = _useState8[0],
+      setPassword2 = _useState8[1];
 
-  var _useState9 = (0, _react.useState)(''),
+  var _useState9 = (0, _react.useState)(Birthday.substr(0, 10)),
       _useState10 = _slicedToArray(_useState9, 2),
-      alertMessage = _useState10[0],
-      setAlertMessage = _useState10[1];
+      birthday = _useState10[0],
+      setBirthday = _useState10[1];
 
-  var _useState11 = (0, _react.useState)(false),
+  var _useState11 = (0, _react.useState)(''),
       _useState12 = _slicedToArray(_useState11, 2),
-      alertShow = _useState12[0],
-      setAlertShow = _useState12[1];
+      alertMessage = _useState12[0],
+      setAlertMessage = _useState12[1];
 
-  var _useState13 = (0, _react.useState)('warning'),
+  var _useState13 = (0, _react.useState)(false),
       _useState14 = _slicedToArray(_useState13, 2),
-      alertVariant = _useState14[0],
-      setAlerVaiant = _useState14[1];
+      alertShow = _useState14[0],
+      setAlertShow = _useState14[1];
+
+  var _useState15 = (0, _react.useState)('warning'),
+      _useState16 = _slicedToArray(_useState15, 2),
+      alertVariant = _useState16[0],
+      setAlerVaiant = _useState16[1];
+
+  var _useState17 = (0, _react.useState)(null),
+      _useState18 = _slicedToArray(_useState17, 2),
+      usernameErr = _useState18[0],
+      setUsernameErr = _useState18[1];
+
+  var _useState19 = (0, _react.useState)(null),
+      _useState20 = _slicedToArray(_useState19, 2),
+      emailErr = _useState20[0],
+      setEmailErr = _useState20[1];
+
+  var _useState21 = (0, _react.useState)(null),
+      _useState22 = _slicedToArray(_useState21, 2),
+      passwordErr = _useState22[0],
+      setPasswordErr = _useState22[1];
+
+  var _useState23 = (0, _react.useState)(null),
+      _useState24 = _slicedToArray(_useState23, 2),
+      password2Err = _useState24[0],
+      setPassword2Err = _useState24[1];
 
   var handleSubmit = function handleSubmit(e) {
     e.preventDefault();
@@ -55182,8 +55293,50 @@ function UpdateView(props) {
     });
   };
 
+  var handleChange = function handleChange(e) {
+    e.preventDefault();
+    var _e$target = e.target,
+        name = _e$target.name,
+        value = _e$target.value;
+
+    switch (name) {
+      case 'username':
+        var usernameTest = value.length < 3 ? 'Minimum 3 characters required' : null;
+        setUsernameErr(usernameTest);
+        setUsername(value);
+        break;
+
+      case 'email':
+        setEmail(value);
+        var emailTest = emailRegex.test(value) ? null : 'Invalid Email Address';
+        setEmailErr(emailTest);
+        break;
+
+      case 'password':
+        if (value.length > 0) setPasswordErr(null);
+        var password2Retest = value === password2 ? null : 'Passwords must match';
+        setPassword(value);
+        setPassword2Err(password2Retest);
+        break;
+
+      case 'password2':
+        var passwordTest = value.length > 0 && password.length < 1 ? 'Password is required' : null;
+        var password2Test = value === password ? null : 'Passwords must match';
+        setPassword2(value);
+        setPasswordErr(passwordTest);
+        setPassword2Err(password2Test);
+        break;
+
+      case 'birthday':
+        setBirthday(value);
+
+      default:
+        break;
+    }
+  };
+
   var validateForm = function validateForm() {
-    return username.length > 2 && email.length > 0 && password.length > 0 && birthday.length > 0;
+    return username.length > 0 && !usernameErr && email.length > 0 && !emailErr && password.length > 0 && !passwordErr && password2.length > 0 && !password2Err && birthday.length > 0;
   };
 
   return /*#__PURE__*/_react.default.createElement("div", {
@@ -55202,53 +55355,63 @@ function UpdateView(props) {
     },
     dismissible: true
   }, alertMessage), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form, {
+    noValidate: true,
     onSubmit: handleSubmit
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
     size: "lg",
     controlId: "username"
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Label, null, "Username"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Control, {
+    className: usernameErr ? 'is-invalid' : null,
     autoFocus: true,
+    name: "username",
     type: "text",
     value: username,
-    onChange: function onChange(e) {
-      return setUsername(e.target.value);
-    }
+    onChange: handleChange
   }), /*#__PURE__*/_react.default.createElement("small", {
-    id: "usernameHelp",
-    className: "form-text text-muted"
-  }, "Minimum 3 characters")), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
+    className: "text-danger"
+  }, usernameErr)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
     size: "lg",
     controlId: "email"
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Label, null, "Email"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Control, {
-    autoFocus: true,
+    className: emailErr ? 'is-invalid' : null,
     type: "email",
+    name: "email",
     value: email,
-    onChange: function onChange(e) {
-      return setEmail(e.target.value);
-    }
-  })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
+    onChange: handleChange
+  }), /*#__PURE__*/_react.default.createElement("small", {
+    className: "text-danger"
+  }, emailErr)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
     size: "lg",
     controlId: "password"
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Label, null, "Password"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Control, {
+    className: passwordErr ? 'is-invalid' : null,
     type: "password",
+    name: "password",
     value: password,
-    onChange: function onChange(e) {
-      return setPassword(e.target.value);
-    }
-  })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
+    onChange: handleChange
+  }), /*#__PURE__*/_react.default.createElement("small", {
+    className: "text-danger"
+  }, passwordErr)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
+    size: "lg",
+    controlId: "password2"
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Label, null, "Confirm Password"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Control, {
+    className: password2Err ? 'is-invalid' : null,
+    type: "password",
+    name: "password2",
+    value: password2,
+    onChange: handleChange,
+    validated: "true"
+  }), /*#__PURE__*/_react.default.createElement("small", {
+    className: "text-danger"
+  }, password2Err)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Group, {
     size: "lg",
     controlId: "birthday"
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Label, null, "Birthday"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Form.Control, {
     type: "date",
+    name: "birthday",
     value: birthday,
-    onChange: function onChange(e) {
-      return setBirthday(e.target.value);
-    }
-  })), /*#__PURE__*/_react.default.createElement("div", {
-    style: {
-      display: 'flex'
-    }
-  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
+    onChange: handleChange
+  })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
     block: true,
     size: "lg",
     type: "submit",
@@ -55261,7 +55424,7 @@ function UpdateView(props) {
       marginTop: '0px'
     },
     onClick: onBackClick
-  }, "Cancel"))))))));
+  }, "Cancel")))))));
 }
 
 var mapStateToProps = function mapStateToProps(state) {
@@ -55759,7 +55922,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55949" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64478" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
