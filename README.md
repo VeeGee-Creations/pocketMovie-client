@@ -8,3 +8,10 @@ pocketMovie is an IMDB like site created as a single page PWA. Movies are stored
 - User Accounts
 - Favorites
 - Movie Filtering
+
+## Tools Used
+- React
+- React Router
+- Redux
+- Axios
+- Bootstrap
